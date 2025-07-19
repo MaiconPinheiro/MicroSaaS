@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bebê Smart - O primeiro app com IA especialista em bebês</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .ai-badge {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .demo-badge {
+            background: #28a745;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-ai {
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            width: auto;
+            padding: 10px 20px;
+            margin: 5px;
+        }
+
+        .btn-whatsapp {
+            background: #25d366;
+            color: white;
+            width: auto;
+            padding: 10px 20px;
+            margin: 5px;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+            width: auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .baby-card {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .baby-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .baby-card.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .plan-card {
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .plan-card.featured {
+            border-color: #667eea;
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin: 15px 0;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .plan-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .plan-features li:before {
+            content: '✓';
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            flex: 1;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .tab.active {
+            border-bottom-color: #667eea;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .milestone-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .activity-item {
+            background: #fff3cd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #ffc107;
+        }
+
+        .age-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .chat-container {
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .chat-message {
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .chat-message.user {
+            background: #667eea;
+            color: white;
+            margin-left: 20%;
+        }
+
+        .chat-message.ai {
+            background: white;
+            color: #333;
+            margin-right: 20%;
+            border: 1px solid #ddd;
+        }
+
+        .ai-usage-display {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .usage-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                min-width: 80px;
+                padding: 10px 15px;
+            }
+
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .plan-card.featured {
+                transform: scale(1);
+            }
+
+            .chat-message.user {
+                margin-left: 10%;
+            }
+
+            .chat-message.ai {
+                margin-right: 10%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👶 Bebê Smart</h1>
+            <div class="ai-badge">🤖 POWERED BY AI</div>
+            <p>O primeiro app brasileiro com IA especialista em bebês</p>
+            <div class="demo-badge">
+                <strong>✅ VERSÃO DEMONSTRATIVA</strong> - GitHub Safe Version
+            </div>
+        </div>
+
+        <!-- Tela de Login -->
+        <div id="loginScreen" class="card">
+            <h2 style="text-align: center; margin-bottom: 30px;">Entre na sua conta</h2>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="loginEmail" placeholder="demo@bebesmart.com.br">
+            </div>
+            <div class="form-group">
+                <label>Senha:</label>
+                <input type="password" id="loginPassword" placeholder="123456">
+            </div>
+            <button class="btn" onclick="login()">Entrar</button>
+            <button class="btn btn-secondary" onclick="showRegister()">Criar conta</button>
+            <div id="loginError" class="error hidden"></div>
+            <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                <strong>🧪 Modo Demo:</strong><br>
+                Email: demo@bebesmart.com.br<br>
+                Senha: 123456
+            </div>
+        </div>
+
+        <!-- Tela de Cadastro -->
+        <div id="registerScreen" class="card hidden">
+            <h2 style="text-align: center; margin-bottom: 30px;">Criar conta</h2>
+            <div class="form-group">
+                <label>Nome completo:</label>
+                <input type="text" id="registerName" placeholder="Seu nome completo">
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="registerEmail" placeholder="seu@email.com">
+            </div>
+            <div class="form-group">
+                <label>Telefone (WhatsApp):</label>
+                <input type="tel" id="registerPhone" placeholder="5511999999999">
+            </div>
+            <div class="form-group">
+                <label>Senha:</label>
+                <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres">
+            </div>
+            <button class="btn" onclick="register()">Criar conta</button>
+            <button class="btn btn-secondary" onclick="showLogin()">Já tenho conta</button>
+            <div id="registerError" class="error hidden"></div>
+        </div>
+
+        <!-- Tela de Planos -->
+        <div id="plansScreen" class="card hidden">
+            <h2 style="text-align: center; margin-bottom: 30px;">Escolha seu plano</h2>
+            <p style="text-align: center; margin-bottom: 30px;">
+                Comece hoje e tenha <strong>15 dias de garantia</strong> para reembolso total!
+            </p>
+            
+            <div class="plans-grid">
+                <div class="plan-card">
+                    <h3>Básico</h3>
+                    <div class="plan-price">R$ 39,90</div>
+                    <p style="color: #666; margin-bottom: 20px;">por mês</p>
+                    <ul class="plan-features">
+                        <li>1 bebê cadastrado</li>
+                        <li>🤖 10 perguntas IA/mês</li>
+                        <li>🎯 5 atividades IA/mês</li>
+                        <li>📊 2 análises IA/mês</li>
+                        <li>Marcos de desenvolvimento</li>
+                        <li>Lembretes WhatsApp básicos</li>
+                        <li>15 dias de garantia</li>
+                    </ul>
+                    <button class="btn" onclick="selectPlan('basic')">Escolher Básico</button>
+                </div>
+
+                <div class="plan-card featured">
+                    <h3>Premium</h3>
+                    <div style="background: #667eea; color: white; padding: 5px 15px; border-radius: 20px; display: inline-block; margin-bottom: 15px;">MAIS POPULAR</div>
+                    <div class="plan-price">R$ 59,90</div>
+                    <p style="color: #666; margin-bottom: 20px;">por mês</p>
+                    <ul class="plan-features">
+                        <li>Bebês ilimitados</li>
+                        <li>🤖 25 perguntas IA/mês</li>
+                        <li>🎯 12 atividades IA/mês</li>
+                        <li>📊 4 análises IA/mês</li>
+                        <li>Marcos completos</li>
+                        <li>Lembretes WhatsApp automáticos</li>
+                        <li>Relatórios PDF</li>
+                        <li>15 dias de garantia</li>
+                    </ul>
+                    <button class="btn" onclick="selectPlan('premium')">Escolher Premium</button>
+                </div>
+
+                <div class="plan-card">
+                    <h3>Família</h3>
+                    <div class="plan-price">R$ 89,90</div>
+                    <p style="color: #666; margin-bottom: 20px;">por mês</p>
+                    <ul class="plan-features">
+                        <li>Todos os recursos Premium</li>
+                        <li>🤖 50 perguntas IA/mês</li>
+                        <li>🎯 25 atividades IA/mês</li>
+                        <li>📊 8 análises IA/mês</li>
+                        <li>👥 Múltiplos cuidadores</li>
+                        <li>🔄 Sincronização familiar</li>
+                        <li>⚡ Suporte prioritário</li>
+                        <li>📈 Relatórios avançados</li>
+                        <li>15 dias de garantia</li>
+                    </ul>
+                    <button class="btn" onclick="selectPlan('family')">Escolher Família</button>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <p><strong>✅ 15 dias de garantia incondicional</strong></p>
+                <p><strong>✅ Cancele quando quiser</strong></p>
+                <p><strong>✅ Suporte por WhatsApp</strong></p>
+                <p><strong>🤖 IA especialista em desenvolvimento infantil</strong></p>
+            </div>
+        </div>
+
+        <!-- Dashboard Principal -->
+        <div id="dashboard" class="hidden">
+            <!-- Uso de IA -->
+            <div id="aiUsageDisplay" class="ai-usage-display">
+                <h4>🤖 Uso de IA este mês</h4>
+                <div id="aiUsageContent">
+                    <div class="usage-item">
+                        <span>🤖 Perguntas ao ChatBot:</span>
+                        <span id="chatbotUsage">0/25</span>
+                    </div>
+                    <div class="usage-item">
+                        <span>🎯 Atividades IA:</span>
+                        <span id="activitiesUsage">0/12</span>
+                    </div>
+                    <div class="usage-item">
+                        <span>📊 Análises IA:</span>
+                        <span id="analysisUsage">0/4</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cabeçalho do usuário -->
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                    <div>
+                        <h2>Olá, <span id="userName">Demo User</span>! 👋</h2>
+                        <p>Acompanhe o desenvolvimento dos seus bebês com IA</p>
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <button class="btn btn-ai btn-small" onclick="showAIChatbot()">🤖 Chat IA</button>
+                        <button class="btn btn-whatsapp btn-small" onclick="testWhatsApp()">📱 WhatsApp</button>
+                        <button class="btn btn-small" onclick="logout()">Sair</button>
+                    </div>
+                </div>
+                <div id="whatsappStatus" class="success hidden"></div>
+            </div>
+
+            <!-- Lista de Bebês -->
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Seus Bebês</h3>
+                    <button class="btn" onclick="showAddBaby()" style="width: auto;">+ Adicionar Bebê</button>
+                </div>
+                <div id="babyList">
+                    <div class="baby-card selected" onclick="selectBaby('demo')">
+                        <h4>Sofia (Demo)</h4>
+                        <p><strong>Idade:</strong> 8 meses e 15 dias</p>
+                        <p><strong>Nascimento:</strong> 15/11/2024</p>
+                        <p><strong>Sexo:</strong> Feminino</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detalhes do Bebê -->
+            <div id="babyDetails" class="card">
+                <h3 id="selectedBabyName">Sofia</h3>
+                <div id="babyAge" class="age-display">
+                    <h3>8 meses e 15 dias</h3>
+                    <p>Nascida em 15/11/2024</p>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="showTab('milestones')">Marcos</div>
+                    <div class="tab" onclick="showTab('activities')">Atividades</div>
+                    <div class="tab" onclick="showTab('ai-activities')">🤖 IA</div>
+                    <div class="tab" onclick="showTab('progress')">Progresso</div>
+                </div>
+
+                <div id="milestonesTab" class="tab-content">
+                    <h4>Marcos de Desenvolvimento</h4>
+                    <div class="milestone-item">
+                        <h5>✅ Sentar sem apoio</h5>
+                        <p><strong>Idade esperada:</strong> 6 meses</p>
+                        <p>Capacidade de manter o equilíbrio sentado sem necessidade de apoio das mãos.</p>
+                        <p><strong>Status:</strong> <span style="color: green;">Alcançado!</span></p>
+                    </div>
+                    <div class="milestone-item">
+                        <h5>🎯 Engatinhar</h5>
+                        <p><strong>Idade esperada:</strong> 8-10 meses</p>
+                        <p>Movimento coordenado de braços e pernas para se locomover.</p>
+                        <p><strong>Status:</strong> <span style="color: orange;">Em desenvolvimento</span></p>
+                    </div>
+                    <div class="milestone-item">
+                        <h5>📅 Primeiras palavras</h5>
+                        <p><strong>Idade esperada:</strong> 10-12 meses</p>
+                        <p>Falar "mamã", "papá" ou outras palavras simples com significado.</p>
+                        <p><strong>Status:</strong> <span style="color: blue;">Próximo marco</span></p>
+                    </div>
+                </div>
+
+                <div id="activitiesTab" class="tab-content hidden">
+                    <h4>Atividades Sugeridas</h4>
+                    <div class="activity-item">
+                        <h5>🎵 Música e Movimento</h5>
+                        <p><strong>Duração:</strong> 15 minutos</p>
+                        <p>Coloque música e mova suavemente os braços e pernas do bebê no ritmo.</p>
+                        <p><strong>Benefícios:</strong> Coordenação motora, ritmo, vínculo afetivo</p>
+                    </div>
+                    <div class="activity-item">
+                        <h5>🧸 Brincadeira com Texturas</h5>
+                        <p><strong>Duração:</strong> 10 minutos</p>
+                        <p>Ofereça objetos seguros com diferentes texturas para exploração.</p>
+                        <p><strong>Benefícios:</strong> Desenvolvimento sensorial, curiosidade</p>
+                    </div>
+                </div>
+
+                <div id="ai-activitiesTab" class="tab-content hidden">
+                    <h4>🤖 Atividades Geradas por IA</h4>
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn btn-ai" onclick="generateAIActivity()">
+                            🎯 Gerar Atividade Personalizada com IA
+                        </button>
+                    </div>
+                    <div id="aiActivitiesList">
+                        <p>Clique no botão acima para gerar atividades personalizadas para Sofia!</p>
+                    </div>
+                </div>
+
+                <div id="progressTab" class="tab-content hidden">
+                    <h4>Progresso Geral</h4>
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn btn-ai" onclick="generateAIAnalysis()">
+                            📊 Análise Inteligente do Progresso
+                        </button>
+                    </div>
+                    <div class="age-display">
+                        <h4>Desenvolvimento Atual</h4>
+                        <p>Sofia está desenvolvendo muito bem para sua idade!</p>
+                        <p>Use a IA para análises personalizadas do progresso!</p>
+                    </div>
+                    <div id="aiAnalysisContent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal do Chatbot IA -->
+        <div id="aiChatModal" class="hidden">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>🤖 Especialista IA em Bebês</h3>
+                    <button class="btn btn-secondary btn-small" onclick="hideAIChatbot()">Fechar</button>
+                </div>
+                
+                <div class="chat-container" id="chatContainer">
+                    <div class="chat-message ai">
+                        Olá! Sou seu especialista em desenvolvimento infantil. Esta é uma versão demonstrativa - em produção seria conectado com IA real para responder dúvidas sobre marcos, atividades, alimentação, sono e muito mais!
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <textarea id="chatInput" placeholder="Digite sua pergunta sobre o desenvolvimento do seu bebê..." rows="3"></textarea>
+                </div>
+                <button class="btn btn-ai" onclick="sendAIMessage()">Enviar Pergunta (Demo)</button>
+                <div id="chatError" class="error hidden"></div>
+            </div>
+        </div>
+
+        <!-- Modal para Adicionar Bebê -->
+        <div id="addBabyModal" class="hidden">
+            <div class="card">
+                <h3>Adicionar Novo Bebê</h3>
+                <div class="form-group">
+                    <label>Nome do bebê:</label>
+                    <input type="text" id="babyName" placeholder="Nome do seu bebê">
+                </div>
+                <div class="form-group">
+                    <label>Data de nascimento:</label>
+                    <input type="date" id="babyBirthDate">
+                </div>
+                <div class="form-group">
+                    <label>Sexo:</label>
+                    <select id="babyGender">
+                        <option value="">Selecione...</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="feminino">Feminino</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="addBaby()">Salvar Bebê</button>
+                <button class="btn btn-secondary" onclick="hideAddBaby()">Cancelar</button>
+                <div id="addBabyError" class="error hidden"></div>
+            </div>
+        </div>
+
+        <!-- Modal de Pagamento -->
+        <div id="paymentModal" class="hidden">
+            <div class="card">
+                <h3 id="paymentPlanName">Plano Premium</h3>
+                <div style="text-align: center; margin: 20px 0;">
+                    <div class="plan-price" id="paymentPlanPrice">R$ 59,90</div>
+                    <p>por mês</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Forma de pagamento:</label>
+                    <select id="paymentMethod">
+                        <option value="pix">PIX (Aprovação instantânea)</option>
+                        <option value="credit_card">Cartão de Crédito</option>
+                        <option value="boleto">Boleto Bancário</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="processPaymentDemo()">Confirmar Pagamento (DEMO)</button>
+                <button class="btn btn-secondary" onclick="hidePaymentModal()">Cancelar</button>
+                <div id="paymentSuccess" class="success hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* BEBÊ SMART - VERSÃO DEMONSTRATIVA PARA GITHUB */
+        /* Todas as funcionalidades operam em modo demonstração */
+        /* Nenhuma integração externa ou credencial incluída */
+
+        // Variáveis do aplicativo
+        let currentUser = null;
+        let selectedBaby = 'demo';
+        let aiUsage = { chatbot: 0, activities: 0, analysis: 0 };
+        let planLimits = { chatbot: 25, activities: 12, analysis: 4 };
+
+        // Inicialização
+        window.addEventListener('load', function() {
+            console.log('Bebê Smart Demo carregado com sucesso!');
+        });
+
+        // Atualizar display de uso de IA
+        function updateAIUsageDisplay() {
+            document.getElementById('chatbotUsage').textContent = `${aiUsage.chatbot}/${planLimits.chatbot}`;
+            document.getElementById('activitiesUsage').textContent = `${aiUsage.activities}/${planLimits.activities}`;
+            document.getElementById('analysisUsage').textContent = `${aiUsage.analysis}/${planLimits.analysis}`;
+        }
+
+        // Funções de Login/Registro (Demonstração)
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showError('loginError', 'Preencha todos os campos');
+                return;
+            }
+
+            // Simular autenticação local
+            currentUser = { email: email, name: email.split('@')[0] };
+            document.getElementById('userName').textContent = currentUser.name;
+            showDashboard();
+        }
+
+        function register() {
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const phone = document.getElementById('registerPhone').value;
+            const password = document.getElementById('registerPassword').value;
+
+            if (!name || !email || !phone || !password) {
+                showError('registerError', 'Preencha todos os campos');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('registerError', 'A senha deve ter pelo menos 6 caracteres');
+                return;
+            }
+
+            // Simular cadastro local
+            currentUser = { email: email, name: name, phone: phone };
+            document.getElementById('userName').textContent = name;
+            showPlansScreen();
+        }
+
+        // Navegação entre telas
+        function hideAllScreens() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('registerScreen').classList.add('hidden');
+            document.getElementById('plansScreen').classList.add('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+        }
+
+        function showLogin() {
+            hideAllScreens();
+            document.getElementById('loginScreen').classList.remove('hidden');
+        }
+
+        function showRegister() {
+            hideAllScreens();
+            document.getElementById('registerScreen').classList.remove('hidden');
+        }
+
+        function showPlansScreen() {
+            hideAllScreens();
+            document.getElementById('plansScreen').classList.remove('hidden');
+        }
+
+        function showDashboard() {
+            hideAllScreens();
+            document.getElementById('dashboard').classList.remove('hidden');
+            updateAIUsageDisplay();
+        }
+
+        // Seleção de planos
+        function selectPlan(planType) {
+            const plans = {
+                'basic': { name: 'Básico', price: 39.90 },
+                'premium': { name: 'Premium', price: 59.90 },
+                'family': { name: 'Família', price: 89.90 }
+            };
+            
+            const plan = plans[planType];
+            document.getElementById('paymentPlanName').textContent = `Plano ${plan.name}`;
+            document.getElementById('paymentPlanPrice').textContent = `R$ ${plan.price.toFixed(2).replace('.', ',')}`;
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        // Processamento de pagamento (Demonstração)
+        function processPaymentDemo() {
+            document.getElementById('paymentSuccess').innerHTML = `
+                <h4>✅ Pagamento processado com sucesso!</h4>
+                <p><strong>MODO DEMONSTRATIVO:</strong> Em produção, seria integrado com gateway real</p>
+                <p>Sua assinatura foi ativada! Aproveite todos os recursos.</p>
+            `;
+            document.getElementById('paymentSuccess').classList.remove('hidden');
+            
+            setTimeout(() => {
+                hidePaymentModal();
+                showDashboard();
+            }, 3000);
+        }
+
+        function hidePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        // Sistema de Chat IA (Demonstração)
+        function showAIChatbot() {
+            if (aiUsage.chatbot >= planLimits.chatbot) {
+                alert('Você atingiu o limite de perguntas IA deste mês. Faça upgrade do seu plano!');
+                return;
+            }
+            document.getElementById('aiChatModal').classList.remove('hidden');
+        }
+
+        function hideAIChatbot() {
+            document.getElementById('aiChatModal').classList.add('hidden');
+        }
+
+        function sendAIMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) {
+                alert('Digite uma pergunta!');
+                return;
+            }
+
+            if (aiUsage.chatbot >= planLimits.chatbot) {
+                alert('Limite de perguntas IA atingido!');
+                return;
+            }
+
+            // Adicionar mensagem do usuário
+            const chatContainer = document.getElementById('chatContainer');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'chat-message user';
+            userMessage.textContent = message;
+            chatContainer.appendChild(userMessage);
+
+            // Simular resposta demonstrativa
+            setTimeout(() => {
+                const aiMessage = document.createElement('div');
+                aiMessage.className = 'chat-message ai';
+                aiMessage.textContent = `Esta é uma resposta demonstrativa para: "${message}". Em produção, seria conectado com sistema de IA real para fornecer respostas especializadas sobre desenvolvimento infantil, marcos, atividades, alimentação e cuidados com bebês.`;
+                chatContainer.appendChild(aiMessage);
+                
+                aiUsage.chatbot++;
+                updateAIUsageDisplay();
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 1500);
+
+            input.value = '';
+        }
+
+        // Gerador de Atividades IA (Demonstração)
+        function generateAIActivity() {
+            if (aiUsage.activities >= planLimits.activities) {
+                alert('Você atingiu o limite de atividades IA deste mês. Faça upgrade do seu plano!');
+                return;
+            }
+
+            const aiList = document.getElementById('aiActivitiesList');
+            const activityDiv = document.createElement('div');
+            activityDiv.className = 'activity-item';
+            activityDiv.innerHTML = `
+                <h5>🤖 Atividade Personalizada por IA</h5>
+                <p><strong>Jogo de Causa e Efeito Sensorial</strong></p>
+                <p><strong>Duração:</strong> 10-15 minutos</p>
+                <p><strong>Descrição:</strong> Esta é uma atividade demonstrativa. Em produção, a IA geraria atividades completamente personalizadas baseadas na idade específica de Sofia (8 meses), preferências e desenvolvimento atual.</p>
+                <p><strong>Materiais:</strong> Objetos seguros com texturas e sons diferentes</p>
+                <p><strong>Benefícios:</strong> Coordenação motora fina, curiosidade, desenvolvimento cognitivo</p>
+                <p style="margin-top: 15px; font-size: 0.9em; color: #666;">
+                    <strong>Gerado em modo demo em:</strong> ${new Date().toLocaleString('pt-BR')}
+                </p>
+            `;
+            
+            if (aiList.children.length === 1) {
+                aiList.innerHTML = '';
+            }
+            
+            aiList.appendChild(activityDiv);
+            aiUsage.activities++;
+            updateAIUsageDisplay();
+        }
+
+        // Análise IA (Demonstração)
+        function generateAIAnalysis() {
+            if (aiUsage.analysis >= planLimits.analysis) {
+                alert('Você atingiu o limite de análises IA deste mês. Faça upgrade do seu plano!');
+                return;
+            }
+
+            const analysisContent = document.getElementById('aiAnalysisContent');
+            analysisContent.innerHTML = `
+                <div class="milestone-item" style="border-left-color: #ff6b6b;">
+                    <h5>🤖 Análise Inteligente do Desenvolvimento</h5>
+                    <p><strong>Análise demonstrativa para Sofia (8 meses):</strong></p>
+                    <p>Esta é uma análise em modo demonstração. Em produção, o sistema analisaria dados reais do desenvolvimento de Sofia, compararia com padrões científicos para 8 meses de idade, e forneceria insights personalizados e recomendações específicas.</p>
+                    <p><strong>Desenvolvimentos esperados nesta fase:</strong> Engatinhar, ficar em pé com apoio, balbuciar</p>
+                    <p><strong>Recomendações personalizadas:</strong> Continue estimulando movimento e coordenação</p>
+                    <p><strong>Próximos marcos importantes:</strong> Primeiras palavras (10-12 meses)</p>
+                    <p style="margin-top: 15px; font-size: 0.9em; color: #666;">
+                        <strong>Análise demonstrativa gerada em:</strong> ${new Date().toLocaleString('pt-BR')}
+                    </p>
+                </div>
+            `;
+            
+            aiUsage.analysis++;
+            updateAIUsageDisplay();
+        }
+
+        // WhatsApp (Demonstração)
+        function testWhatsApp() {
+            document.getElementById('whatsappStatus').innerHTML = `
+                <strong>✅ WhatsApp Demo Funcionando!</strong><br>
+                Em produção, seria integrado com WhatsApp Business para envio de mensagens automáticas e lembretes personalizados.
+            `;
+            document.getElementById('whatsappStatus').classList.remove('hidden');
+            
+            setTimeout(() => {
+                document.getElementById('whatsappStatus').classList.add('hidden');
+            }, 4000);
+        }
+
+        // Gestão de bebês
+        function selectBaby(babyId) {
+            selectedBaby = babyId;
+            // Demonstração: já tem Sofia selecionada
+        }
+
+        function showAddBaby() {
+            document.getElementById('addBabyModal').classList.remove('hidden');
+        }
+
+        function hideAddBaby() {
+            document.getElementById('addBabyModal').classList.add('hidden');
+        }
+
+        function addBaby() {
+            const name = document.getElementById('babyName').value;
+            const birthDate = document.getElementById('babyBirthDate').value;
+            const gender = document.getElementById('babyGender').value;
+
+            if (!name || !birthDate || !gender) {
+                showError('addBabyError', 'Preencha todos os campos');
+                return;
+            }
+
+            // Demonstração: simular adição
+            alert(`✅ Bebê ${name} adicionado com sucesso! (DEMO)\n\nEm produção, seria salvo no banco de dados e apareceria na lista de bebês.`);
+            hideAddBaby();
+            
+            // Limpar campos
+            document.getElementById('babyName').value = '';
+            document.getElementById('babyBirthDate').value = '';
+            document.getElementById('babyGender').value = '';
+        }
+
+        // Navegação por abas
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName + 'Tab').classList.remove('hidden');
+            event.target.classList.add('active');
+        }
+
+        // Logout
+        function logout() {
+            currentUser = null;
+            selectedBaby = null;
+            aiUsage = { chatbot: 0, activities: 0, analysis: 0 };
+            showLogin();
+        }
+
+        // Utilitários
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.classList.remove('hidden');
+            element.classList.add('error');
+        }
+
+        // Enter no chat
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendAIMessage();
+                    }
+                });
+            }
+        });
+
+        // Log informativo para demonstração
+        console.log('🎯 Bebê Smart - Versão Demonstrativa GitHub Safe');
+        console.log('✅ Pronto para hospedagem');
+        console.log('🔒 Versão demonstrativa segura');
+        console.log('🎮 Funcionalidades em modo demo');
+    </script>
+</body>
+</html>
