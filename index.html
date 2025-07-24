@@ -433,24 +433,48 @@
                 });
 
                 console.log('📡 Resposta recebida:', response.status);
-                const result = await response.json();
-                console.log('📦 Dados:', result);
+                console.log('📡 Headers:', response.headers.get('content-type'));
+                
+                // Verificar se é JSON válido
+                const contentType = response.headers.get('content-type');
+                let result;
+                
+                if (contentType && contentType.includes('application/json')) {
+                    result = await response.json();
+                } else {
+                    // Se não for JSON, pegar como texto
+                    const textResult = await response.text();
+                    console.log('📦 Resposta como texto:', textResult);
+                    try {
+                        result = JSON.parse(textResult);
+                    } catch (e) {
+                        console.log('❌ Erro ao fazer parse JSON:', e);
+                        result = { status: 'error', message: 'Resposta inválida do servidor' };
+                    }
+                }
+                
+                console.log('📦 Dados processados:', result);
 
-                if (result.status === 'success') {
+                if (result && result.status === 'success') {
                     // ✅ SUCESSO - Usuário criado
                     console.log('✅ Usuário criado com sucesso!');
+                    
+                    // Garantir que next_steps é string
+                    const nextSteps = typeof result.next_steps === 'string' ? result.next_steps : 'Faça login e escolha seu plano!';
+                    const message = typeof result.message === 'string' ? result.message : 'Cadastro realizado com sucesso!';
                     
                     document.getElementById('registerError').innerHTML = `
                         <div class="success">
                             <h4>🎉 Cadastro realizado com sucesso!</h4>
                             <p><strong>Bem-vindo(a), ${nome}!</strong></p>
-                            <p><strong>📱 Verifique seu WhatsApp</strong> - enviamos uma mensagem de boas-vindas!</p>
-                            <p><strong>Próximos passos:</strong> ${result.next_steps || 'Faça login e escolha seu plano!'}</p>
+                            <p><strong>📱 ${message}</strong></p>
+                            <p><strong>Próximos passos:</strong> ${nextSteps}</p>
                             <p style="font-size: 12px; margin-top: 10px; color: #6c757d;">
                                 <strong>✅ Usuário criado no Supabase</strong><br>
                                 <strong>📱 WhatsApp enviado via Evolution API</strong><br>
                                 <strong>🔒 Dados protegidos conforme LGPD</strong><br>
                                 <strong>🚀 Sistema totalmente funcional!</strong>
+                                ${result.user_id ? `<br><strong>🆔 ID:</strong> ${result.user_id}` : ''}
                             </p>
                         </div>
                     `;
@@ -479,8 +503,9 @@
                     
                 } else {
                     // ❌ ERRO do servidor (email já existe, etc.)
-                    console.log('❌ Erro:', result.message);
-                    showError('registerError', result.message || 'Erro ao criar conta. Tente novamente.');
+                    const errorMessage = (result && typeof result.message === 'string') ? result.message : 'Erro ao criar conta. Tente novamente.';
+                    console.log('❌ Erro:', errorMessage);
+                    showError('registerError', errorMessage);
                 }
 
             } catch (error) {
