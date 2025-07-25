@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bebê Smart - O primeiro app com IA especialista em bebês</title>
+    <title>InfantIA - A Primeira IA Brasileira Especializada em Desenvolvimento Infantil</title>
     <style>
         * {
             margin: 0;
@@ -42,6 +42,10 @@
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .ai-badge {
@@ -249,9 +253,10 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>👶 Bebê Smart</h1>
-            <div class="ai-badge">🤖 POWERED BY AI</div>
-            <p>O primeiro app brasileiro com IA especialista em bebês</p>
+            <h1>🤖 InfantIA</h1>
+            <div class="ai-badge">🧠 PRIMEIRA IA BRASILEIRA PARA BEBÊS</div>
+            <p><strong>A Primeira Inteligência Artificial Brasileira Especializada em Desenvolvimento Infantil</strong></p>
+            <p style="font-size: 1.1rem; margin-top: 10px;">Tecnologia que entende seu bebê</p>
             <div class="demo-badge">
                 <strong>🚀 SISTEMA REAL FUNCIONANDO</strong> - Cadastro + WhatsApp + IA integrados
             </div>
@@ -261,7 +266,7 @@
         <div class="medical-disclaimer">
             <h4 style="color: #721c24; margin-bottom: 10px;">⚠️ AVISO MÉDICO IMPORTANTE</h4>
             <p style="color: #721c24; margin: 0; font-size: 14px;">
-                <strong>O Bebê Smart é uma ferramenta APENAS educativa e organizacional.</strong><br>
+                <strong>O InfantIA é uma ferramenta APENAS educativa e organizacional.</strong><br>
                 NÃO oferece serviços médicos, diagnósticos ou tratamentos. <strong>Sempre consulte pediatras qualificados</strong> para questões de saúde do seu bebê.
                 <br><br>
                 <a href="#" onclick="showLegalModal('termos')" class="btn-legal">📋 Termos de Uso</a>
@@ -289,7 +294,7 @@
 
             <div class="form-group">
                 <label>Email:</label>
-                <input type="email" id="loginEmail" placeholder="demo@bebesmart.com.br">
+                <input type="email" id="loginEmail" placeholder="demo@infantia.com.br">
             </div>
             <div class="form-group">
                 <label>Senha:</label>
@@ -300,7 +305,7 @@
             <div id="loginError" class="error hidden"></div>
             <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-top: 15px;">
                 <strong>🧪 Modo Demo:</strong><br>
-                Email: demo@bebesmart.com.br<br>
+                Email: demo@infantia.com.br<br>
                 Senha: 123456
             </div>
         </div>
@@ -359,7 +364,7 @@
     </div>
 
     <script>
-        // === BEBÊ SMART - SISTEMA REAL FUNCIONANDO ===
+        // === INFANTIA - SISTEMA REAL FUNCIONANDO ===
         // Cadastro real integrado com N8N + Supabase + WhatsApp
 
         // Variáveis globais
@@ -367,16 +372,16 @@
 
         // Inicialização
         window.addEventListener('load', function() {
-            console.log('🚀 Bebê Smart REAL carregado com sucesso!');
+            console.log('🚀 InfantIA REAL carregado com sucesso!');
             console.log('✅ Sistema de cadastro conectado com N8N');
             console.log('✅ Integração Supabase + WhatsApp funcionando');
-            console.log('🔗 Webhook: https://n8neditor.streamimpactoia.com.br/webhook/cadastro-bebe-smart');
+            console.log('🔗 Webhook: https://n8neditor.streamimpactoia.com.br/webhook/cadastro-infantia');
             checkTermsAcceptance();
         });
 
         // Verificar aceitação dos termos
         function checkTermsAcceptance() {
-            const termsAccepted = localStorage.getItem('bebeSmartTermsAccepted');
+            const termsAccepted = localStorage.getItem('infantiaTermsAccepted');
             if (!termsAccepted) {
                 setTimeout(() => {
                     showLegalModal('termos');
@@ -419,7 +424,7 @@
             try {
                 console.log('📡 Enviando dados para N8N...');
                 
-                const response = await fetch('https://n8neditor.streamimpactoia.com.br/webhook/cadastro-bebe-smart', {
+                const response = await fetch('https://n8neditor.streamimpactoia.com.br/webhook/cadastro-infantia', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -465,15 +470,15 @@
                     
                     document.getElementById('registerError').innerHTML = `
                         <div class="success">
-                            <h4>🎉 Cadastro realizado com sucesso!</h4>
-                            <p><strong>Bem-vindo(a), ${nome}!</strong></p>
+                            <h4>🎉 Bem-vindo(a) ao InfantIA!</h4>
+                            <p><strong>Parabéns, ${nome}!</strong></p>
                             <p><strong>📱 ${message}</strong></p>
                             <p><strong>Próximos passos:</strong> ${nextSteps}</p>
                             <p style="font-size: 12px; margin-top: 10px; color: #6c757d;">
                                 <strong>✅ Usuário criado no Supabase</strong><br>
                                 <strong>📱 WhatsApp enviado via Evolution API</strong><br>
                                 <strong>🔒 Dados protegidos conforme LGPD</strong><br>
-                                <strong>🚀 Sistema totalmente funcional!</strong>
+                                <strong>🤖 A Primeira IA Brasileira para Bebês!</strong>
                                 ${result.user_id ? `<br><strong>🆔 ID:</strong> ${result.user_id}` : ''}
                             </p>
                         </div>
@@ -493,7 +498,7 @@
                         showLogin();
                         document.getElementById('loginError').innerHTML = `
                             <div class="success">
-                                <p><strong>🎉 Conta criada com sucesso!</strong> Agora faça login para continuar!</p>
+                                <p><strong>🎉 Conta InfantIA criada com sucesso!</strong> Agora faça login para continuar!</p>
                                 <p><strong>📱 Não esqueça de verificar seu WhatsApp!</strong></p>
                             </div>
                         `;
@@ -560,10 +565,10 @@
             const content = document.getElementById('legalModalContent');
             
             if (type === 'termos') {
-                title.textContent = 'Termos de Uso - Bebê Smart';
+                title.textContent = 'Termos de Uso - InfantIA';
                 content.innerHTML = getTermsContent();
             } else if (type === 'privacidade') {
-                title.textContent = 'Política de Privacidade - Bebê Smart';
+                title.textContent = 'Política de Privacidade - InfantIA';
                 content.innerHTML = getPrivacyContent();
             }
             
@@ -586,8 +591,9 @@
                     <li><strong>NÃO deve ser usado</strong> em emergências médicas</li>
                 </ul>
                 
-                <h4 style="color: #28a745;">✅ O QUE É O BEBÊ SMART:</h4>
+                <h4 style="color: #28a745;">✅ O QUE É O INFANTIA:</h4>
                 <ul>
+                    <li><strong>Primeira IA brasileira</strong> especializada em desenvolvimento infantil</li>
                     <li><strong>Ferramenta educativa</strong> para acompanhamento do desenvolvimento</li>
                     <li><strong>Sistema organizacional</strong> de informações sobre bebês</li>
                     <li><strong>Sugestões de atividades</strong> baseadas em literatura científica</li>
@@ -618,7 +624,7 @@
         function getPrivacyContent() {
             return `
                 <h4 style="color: #17a2b8;">🔒 PROTEÇÃO DE DADOS</h4>
-                <p>O Bebê Smart está comprometido com a proteção rigorosa da privacidade, especialmente de dados de crianças e adolescentes.</p>
+                <p>O InfantIA está comprometido com a proteção rigorosa da privacidade, especialmente de dados de crianças e adolescentes.</p>
                 
                 <h4>👶 PROTEÇÃO ESPECIAL DE MENORES</h4>
                 <ul>
@@ -659,8 +665,8 @@
                 
                 <h4>📞 CONTATO PARA DADOS</h4>
                 <p>
-                    <strong>DPO:</strong> dpo@bebesmart.com.br<br>
-                    <strong>Privacidade:</strong> privacidade@bebesmart.com.br<br>
+                    <strong>DPO:</strong> dpo@infantia.com.br<br>
+                    <strong>Privacidade:</strong> privacidade@infantia.com.br<br>
                     <strong>Prazo de resposta:</strong> até 15 dias úteis
                 </p>
             `;
@@ -668,7 +674,7 @@
 
         // Aceitar termos
         function acceptTerms() {
-            localStorage.setItem('bebeSmartTermsAccepted', 'true');
+            localStorage.setItem('infantiaTermsAccepted', 'true');
             hideLegalModal();
             alert('✅ Termos aceitos! Lembre-se: sempre consulte seu pediatra para orientações específicas sobre seu bebê.');
         }
@@ -683,7 +689,7 @@
         }
 
         // Log de inicialização
-        console.log('🎯 Bebê Smart - Sistema Real Funcionando');
+        console.log('🎯 InfantIA - A Primeira IA Brasileira para Bebês');
         console.log('✅ Conformidade total com LGPD');
         console.log('⚖️ Disclaimers médicos integrados');
         console.log('🔒 Proteção especial para dados de menores');
