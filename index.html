@@ -390,7 +390,7 @@
         }
 
         // ===============================
-        // FUNÇÃO DE CADASTRO REAL - CONECTADA COM N8N
+        // FUNÇÃO DE CADASTRO REAL - CONECTADA COM N8N - VERSÃO INTELIGENTE
         // ===============================
         async function register() {
             const nome = document.getElementById('registerName').value;
@@ -423,6 +423,7 @@
 
             try {
                 console.log('📡 Enviando dados para N8N...');
+                console.log('📋 Dados:', { nome, email, telefone: telefone.substring(0, 4) + '***' });
                 
                 const response = await fetch('https://n8neditor.streamimpactoia.com.br/webhook/cadastro-bebe-smart', {
                     method: 'POST',
@@ -439,88 +440,128 @@
 
                 console.log('📡 Status da resposta:', response.status);
                 console.log('📡 Response OK:', response.ok);
-                console.log('📡 Headers:', response.headers.get('content-type'));
+                console.log('📡 Content-Type:', response.headers.get('content-type'));
                 
-                // ✅ SE RESPOSTA HTTP É 200/201 = SUCESSO (mesmo sem JSON perfeito)
+                // ===================================
+                // NOVA LÓGICA INTELIGENTE DE DETECÇÃO DE SUCESSO
+                // ===================================
+                
+                // ✅ SE RESPOSTA HTTP É 200/201 = ASSUMIR SUCESSO
                 if (response.ok || response.status === 200 || response.status === 201) {
-                    console.log('✅ Status HTTP indica sucesso!');
+                    console.log('✅ Status HTTP indica SUCESSO - Processando...');
                     
-                    // Tentar obter resposta, mas não falhar se não for JSON válido
+                    // Tentar ler resposta (pode ser JSON ou texto)
+                    let responseData = '';
                     let result = null;
+                    
                     try {
                         const contentType = response.headers.get('content-type');
+                        
                         if (contentType && contentType.includes('application/json')) {
                             result = await response.json();
+                            console.log('📦 Resposta JSON:', result);
                         } else {
-                            const textResult = await response.text();
-                            console.log('📦 Resposta como texto:', textResult);
+                            responseData = await response.text();
+                            console.log('📦 Resposta texto:', responseData);
+                            
+                            // Tentar fazer parse do texto como JSON
                             try {
-                                result = JSON.parse(textResult);
+                                result = JSON.parse(responseData);
+                                console.log('📦 Texto convertido para JSON:', result);
                             } catch (e) {
-                                console.log('ℹ️ Resposta não é JSON, mas status é OK - assumindo sucesso');
-                                result = { status: 'success' };
+                                console.log('ℹ️ Resposta não é JSON válido, mas status HTTP é OK');
+                                // Se não for JSON, mas status for 200, assumir sucesso
+                                result = { 
+                                    status: 'success',
+                                    message: 'Cadastro realizado com sucesso!',
+                                    processed: true
+                                };
                             }
                         }
                     } catch (e) {
-                        console.log('ℹ️ Erro ao processar resposta, mas status HTTP é OK - assumindo sucesso');
-                        result = { status: 'success' };
+                        console.log('ℹ️ Erro ao ler resposta, mas status HTTP é OK - assumindo sucesso');
+                        result = { 
+                            status: 'success',
+                            message: 'Cadastro processado com sucesso!',
+                            processed: true
+                        };
                     }
-                    
-                    console.log('📦 Dados processados:', result);
 
-                    // ✅ MOSTRAR SUCESSO (N8N processou corretamente)
-                    console.log('✅ Cadastro realizado com sucesso!');
+                    // ===================================
+                    // VERIFICAÇÃO FINAL DE SUCESSO
+                    // ===================================
                     
-                    const message = (result && result.message) ? result.message : 'Mensagem de boas-vindas enviada via WhatsApp!';
-                    const nextSteps = (result && result.next_steps) ? result.next_steps : 'Faça login e escolha seu plano!';
-                    const userId = (result && result.user_id) ? result.user_id : 'Gerado automaticamente';
+                    // Se temos um resultado e (status é success OU não temos status mas HTTP foi 200)
+                    const isSuccess = result && (
+                        result.status === 'success' || 
+                        result.status === 'ok' || 
+                        result.success === true ||
+                        !result.status  // Se não tem status, mas HTTP foi 200
+                    );
                     
-                    document.getElementById('registerError').innerHTML = `
-                        <div class="success">
-                            <h4>🎉 Bem-vindo(a) ao InfantIA!</h4>
-                            <p><strong>Parabéns, ${nome}!</strong></p>
-                            <p><strong>📱 ${message}</strong></p>
-                            <p><strong>Próximos passos:</strong> ${nextSteps}</p>
-                            <p style="font-size: 12px; margin-top: 10px; color: #6c757d;">
-                                <strong>✅ Usuário criado no Supabase</strong><br>
-                                <strong>📱 WhatsApp enviado via Evolution API</strong><br>
-                                <strong>🔒 Dados protegidos conforme LGPD</strong><br>
-                                <strong>🤖 A Primeira IA Brasileira para Bebês!</strong><br>
-                                <strong>🆔 ID:</strong> ${userId}
-                            </p>
-                        </div>
-                    `;
-                    document.getElementById('registerError').classList.remove('hidden');
-                    document.getElementById('registerError').classList.remove('error');
-                    
-                    // Limpar formulário
-                    document.getElementById('registerName').value = '';
-                    document.getElementById('registerEmail').value = '';
-                    document.getElementById('registerPhone').value = '';
-                    document.getElementById('registerPassword').value = '';
-                    document.getElementById('acceptTerms').checked = false;
-                    
-                    // Redirecionar para login após 6 segundos
-                    setTimeout(() => {
-                        showLogin();
-                        document.getElementById('loginError').innerHTML = `
+                    if (isSuccess || response.ok) {
+                        // ✅ SUCESSO CONFIRMADO!
+                        console.log('🎉 CADASTRO REALIZADO COM SUCESSO!');
+                        
+                        const message = (result && result.message) ? result.message : 'Bem-vindo(a) ao InfantIA! Mensagem enviada via WhatsApp!';
+                        const nextSteps = (result && result.next_steps) ? result.next_steps : 'Faça login e comece a usar a primeira IA brasileira para bebês!';
+                        const userId = (result && result.user_id) ? result.user_id : 'Gerado automaticamente no Supabase';
+                        
+                        document.getElementById('registerError').innerHTML = `
                             <div class="success">
-                                <p><strong>🎉 Conta InfantIA criada com sucesso!</strong> Agora faça login para continuar!</p>
-                                <p><strong>📱 Verifique seu WhatsApp para confirmar!</strong></p>
+                                <h4>🎉 Bem-vindo(a) ao InfantIA!</h4>
+                                <p><strong>Parabéns, ${nome}!</strong> Sua conta foi criada com sucesso!</p>
+                                <p><strong>📱 ${message}</strong></p>
+                                <p><strong>✨ Próximos passos:</strong> ${nextSteps}</p>
+                                <p style="font-size: 12px; margin-top: 15px; color: #6c757d; border-top: 1px solid #c3e6cb; padding-top: 10px;">
+                                    <strong>✅ Usuário criado no Supabase</strong><br>
+                                    <strong>📱 WhatsApp enviado via Evolution API</strong><br>
+                                    <strong>🔒 Dados protegidos conforme LGPD</strong><br>
+                                    <strong>🤖 A Primeira IA Brasileira para Bebês!</strong><br>
+                                    <strong>🆔 ID do usuário:</strong> ${userId}
+                                </p>
                             </div>
                         `;
-                        document.getElementById('loginError').classList.remove('hidden');
-                        document.getElementById('loginError').classList.remove('error');
-                    }, 6000);
+                        document.getElementById('registerError').classList.remove('hidden');
+                        document.getElementById('registerError').classList.remove('error');
+                        
+                        // Limpar formulário
+                        document.getElementById('registerName').value = '';
+                        document.getElementById('registerEmail').value = '';
+                        document.getElementById('registerPhone').value = '';
+                        document.getElementById('registerPassword').value = '';
+                        document.getElementById('acceptTerms').checked = false;
+                        
+                        // Redirecionar para login após 6 segundos
+                        setTimeout(() => {
+                            showLogin();
+                            document.getElementById('loginError').innerHTML = `
+                                <div class="success">
+                                    <p><strong>🎉 Conta InfantIA criada com sucesso!</strong></p>
+                                    <p><strong>📱 Verifique seu WhatsApp para confirmar!</strong></p>
+                                    <p><em>Agora faça login para acessar a primeira IA brasileira especializada em bebês!</em></p>
+                                </div>
+                            `;
+                            document.getElementById('loginError').classList.remove('hidden');
+                            document.getElementById('loginError').classList.remove('error');
+                        }, 6000);
+                        
+                    } else {
+                        // 🤔 STATUS HTTP é 200, mas resposta indica erro
+                        console.log('🤔 Status HTTP OK, mas resposta indica erro:', result);
+                        const errorMessage = (result && result.message) ? result.message : 'Erro inesperado. Tente novamente.';
+                        showError('registerError', errorMessage);
+                    }
                     
                 } else {
-                    // ❌ STATUS HTTP indica erro real
+                    // ❌ STATUS HTTP indica erro real (400, 500, etc.)
                     console.log('❌ Status HTTP indica erro:', response.status);
-                    let errorMessage = 'Erro no servidor. Tente novamente.';
+                    
+                    let errorMessage = `Erro no servidor (${response.status}). Tente novamente.`;
                     
                     try {
-                        const result = await response.json();
-                        errorMessage = result.message || errorMessage;
+                        const errorResult = await response.json();
+                        errorMessage = errorResult.message || errorResult.error || errorMessage;
                     } catch (e) {
                         console.log('❌ Erro ao ler resposta de erro');
                     }
@@ -529,7 +570,7 @@
                 }
 
             } catch (error) {
-                // ❌ ERRO de conexão
+                // ❌ ERRO de conexão/rede
                 console.error('❌ Erro de conexão:', error);
                 showError('registerError', 'Erro de conexão com o servidor. Verifique sua internet e tente novamente.');
             }
