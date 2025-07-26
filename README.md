@@ -1,17 +1,17 @@
-# 🤖 InfantIA
+# 🌅 Aurora IA
 
 ## A Primeira Inteligência Artificial Brasileira Especializada em Desenvolvimento Infantil
 
-> **Tecnologia que entende seu bebê** 👶🧠
+> **Tecnologia que ilumina o desenvolvimento do seu bebê** 👶🌟
 
 ---
 
 ## 🎯 **VISÃO GERAL**
 
-**InfantIA** é um MicroSaaS inovador que combina inteligência artificial avançada com conhecimento científico para apoiar pais e cuidadores no acompanhamento do desenvolvimento infantil.
+**Aurora IA** é um MicroSaaS inovador que combina inteligência artificial avançada com conhecimento científico para apoiar pais e cuidadores no acompanhamento do desenvolvimento infantil.
 
 ### 🏆 **DIFERENCIAIS ÚNICOS**
-- 🤖 **Primeira IA brasileira** especializada em bebês
+- 🌅 **Primeira IA brasileira** especializada em bebês
 - 📚 **Base científica rigorosa** (AAP, SBP, OMS)
 - 🔒 **Conformidade LGPD total** desde o design
 - 📱 **WhatsApp integrado** para automação
@@ -54,8 +54,8 @@ Frontend → N8N Webhook → Validação → Supabase → Evolution API → What
 ```
 
 ### **Integrações Ativas**
-- 🔗 **N8N Workflow:** "InfantIA - Cadastros usuarios" ATIVO
-- 🔗 **Webhook:** `https://n8neditor.streamimpactoia.com.br/webhook/cadastro-infantia`
+- 🔗 **N8N Workflow:** "Aurora IA - Cadastros usuarios" ATIVO
+- 🔗 **Webhook:** `https://n8neditor.streamimpactoia.com.br/webhook/cadastro-aurora-ia`
 - 🔗 **Supabase:** Tabela profiles com RLS configurada
 - 🔗 **Evolution API:** WhatsApp automático OPERACIONAL
 
@@ -121,8 +121,8 @@ Frontend → N8N Webhook → Validação → Supabase → Evolution API → What
 
 ### **1. Acesso ao Sistema**
 ```
-URL: https://microsaas-tau.vercel.app/
-Demo: demo@infantia.com.br / 123456
+URL: https://aurora-ia.vercel.app/
+Demo: demo@aurora-ia.com.br / 123456
 ```
 
 ### **2. Estrutura do Projeto**
@@ -160,32 +160,34 @@ Demo: demo@infantia.com.br / 123456
 
 ---
 
-## 🎨 **REBRANDING REALIZADO**
+## 🎨 **EVOLUÇÃO DA MARCA**
 
-### **De: Bebê Smart → Para: InfantIA**
+### **Histórico dos Nomes**
+1. **Bebê Smart** → Conflito legal com "Smart Baby"
+2. **InfantIA** → Nome genérico, SEO prejudicado
+3. **Aurora IA** → Nome único, memorável e tech ✅
 
-**Motivos da mudança:**
-- ❌ **Conflito legal** com "Smart Baby" existente
-- ❌ **Mercado saturado** com termos genéricos
-- ❌ **SEO prejudicado** pela competição
-- ❌ **Identidade fraca** para MicroSaaS
-
-**Benefícios do InfantIA:**
-- ✅ **Nome único** e memorável
-- ✅ **Destaca IA** como diferencial
-- ✅ **Zero conflitos** legais
-- ✅ **Posicionamento tech** claro
-- ✅ **Escalabilidade** internacional
+### **Por que Aurora IA?**
+- 🌅 **Aurora** = despertar, novo começo, luz
+- 🧠 **IA** = destaca a tecnologia avançada
+- 🎯 **Único** no mercado brasileiro
+- 🚀 **Escalável** internacionalmente
+- 💫 **Memorável** e poético
 
 ---
 
 ## 📞 **CONTATO & SUPORTE**
 
-### **Equipe InfantIA**
-- 📧 **Email:** contato@infantia.com.br
-- 🔒 **Privacidade:** privacidade@infantia.com.br
-- ⚖️ **DPO:** dpo@infantia.com.br
-- 📱 **Suporte:** suporte@infantia.com.br
+### **Equipe Aurora IA**
+- 📧 **Email:** contato@aurora-ia.com.br
+- 🔒 **Privacidade:** privacidade@aurora-ia.com.br
+- ⚖️ **DPO:** dpo@aurora-ia.com.br
+- 📱 **Suporte:** suporte@aurora-ia.com.br
+
+### **Redes Sociais**
+- 📸 **Instagram:** [@aurora.ia.bebe](https://instagram.com/aurora.ia.bebe)
+- 🐦 **Twitter:** [@AuroraIA_BR](https://twitter.com/AuroraIA_BR)
+- 💼 **LinkedIn:** [Aurora IA](https://linkedin.com/company/aurora-ia)
 
 ### **Desenvolvedor**
 - 👨‍💻 **GitHub:** [@MaiconPinheiro](https://github.com/MaiconPinheiro)
@@ -196,7 +198,7 @@ Demo: demo@infantia.com.br / 123456
 ## 📝 **LICENÇA & DISCLAIMER**
 
 ### **⚠️ AVISO MÉDICO IMPORTANTE**
-O InfantIA é uma ferramenta **APENAS educativa e organizacional**. NÃO oferece serviços médicos, diagnósticos ou tratamentos. **Sempre consulte pediatras qualificados** para questões de saúde do seu bebê.
+Aurora IA é uma ferramenta **APENAS educativa e organizacional**. NÃO oferece serviços médicos, diagnósticos ou tratamentos. **Sempre consulte pediatras qualificados** para questões de saúde do seu bebê.
 
 ### **🚨 EMERGÊNCIAS**
 **NUNCA use este app em emergências!**  
@@ -206,8 +208,8 @@ Ligue: **192 (SAMU)** ou **193 (Bombeiros)**
 
 ## 🎯 **CONCLUSÃO**
 
-**InfantIA** representa a evolução natural do cuidado infantil digital, combinando:
-- 🤖 **Inteligência Artificial** de ponta
+**Aurora IA** representa a evolução natural do cuidado infantil digital, combinando:
+- 🌅 **Nova Era** da tecnologia para bebês
 - 📚 **Conhecimento científico** rigoroso
 - 🔒 **Proteção de dados** exemplar
 - ⚖️ **Conformidade legal** total
@@ -220,10 +222,10 @@ Ligue: **192 (SAMU)** ou **193 (Bombeiros)**
 
 <div align="center">
 
-**🚀 InfantIA - A Primeira IA Brasileira para Bebês 👶🤖**
+**🌅 Aurora IA - A Primeira IA Brasileira para Bebês 👶🤖**
 
-*Tecnologia que entende seu bebê*
+*Tecnologia que ilumina o desenvolvimento do seu bebê*
 
-**[🌐 Acessar InfantIA](https://microsaas-tau.vercel.app/)**
+**[🌐 Acessar Aurora IA](https://aurora-ia.vercel.app/)**
 
 </div>
