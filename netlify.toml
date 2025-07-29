@@ -1,0 +1,33 @@
+[build]
+  command = "echo 'No build command needed'"
+  functions = "netlify/functions"
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  node_bundler = "esbuild"
+
+# Configurações específicas das functions
+[[functions]]
+  path = "netlify/functions/auth-register.js"
+  
+[[functions]]
+  path = "netlify/functions/auth-login.js"
+  
+[[functions]]
+  path = "netlify/functions/chat-ia.js"
+  
+[[functions]]
+  path = "netlify/functions/user-profile.js"
