@@ -1,33 +1,118 @@
+# Aurora IA - Configuração Netlify
+# Modelo sem trial - Pagamento direto
+
 [build]
-  command = "echo 'No build command needed'"
-  functions = "netlify/functions"
   publish = "."
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "18"
 
+# Edge Functions
+[[edge_functions]]
+  function = "auth-register"
+  path = "/.netlify/functions/auth-register"
+
+[[edge_functions]]
+  function = "auth-login"
+  path = "/.netlify/functions/auth-login"
+
+[[edge_functions]]
+  function = "chat-ia"
+  path = "/.netlify/functions/chat-ia"
+
+[[edge_functions]]
+  function = "user-profile"
+  path = "/.netlify/functions/user-profile"
+
+[[edge_functions]]
+  function = "stripe-webhook"
+  path = "/.netlify/functions/stripe-webhook"
+
+# Redirects e rewrites
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  from = "/api/auth/register"
+  to = "/.netlify/functions/auth-register"
   status = 200
 
 [[redirects]]
-  from = "/*"
+  from = "/api/auth/login"
+  to = "/.netlify/functions/auth-login"
+  status = 200
+
+[[redirects]]
+  from = "/api/chat"
+  to = "/.netlify/functions/chat-ia"
+  status = 200
+
+[[redirects]]
+  from = "/api/profile"
+  to = "/.netlify/functions/user-profile"
+  status = 200
+
+[[redirects]]
+  from = "/api/stripe/webhook"
+  to = "/.netlify/functions/stripe-webhook"
+  status = 200
+
+# Páginas de sucesso e erro
+[[redirects]]
+  from = "/sucesso"
   to = "/index.html"
   status = 200
 
-[functions]
-  node_bundler = "esbuild"
+[[redirects]]
+  from = "/erro"
+  to = "/index.html"
+  status = 200
 
-# Configurações específicas das functions
-[[functions]]
-  path = "netlify/functions/auth-register.js"
-  
-[[functions]]
-  path = "netlify/functions/auth-login.js"
-  
-[[functions]]
-  path = "netlify/functions/chat-ia.js"
-  
-[[functions]]
-  path = "netlify/functions/user-profile.js"
+# Headers de segurança
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.stripe.com https://*.supabase.co"
+
+# Headers específicos para APIs
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "authorization, x-client-info, apikey, content-type"
+    Access-Control-Allow-Methods = "POST, GET, OPTIONS, PUT, DELETE"
+
+# Cache para assets estáticos
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+# Variáveis de ambiente necessárias (configurar no Netlify Dashboard)
+# SUPABASE_URL=https://xxx.supabase.co
+# SUPABASE_ANON_KEY=eyJhbGc...
+# SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
+# STRIPE_SECRET_KEY=sk_live_... (ou sk_test_... para desenvolvimento)
+# STRIPE_WEBHOOK_SECRET=whsec_...
+# EVOLUTION_API_URL=https://xxx.com
+# EVOLUTION_API_KEY=xxx
+# EVOLUTION_INSTANCE=xxx
+# OPENAI_API_KEY=sk-xxx
+# SITE_URL=https://aurora-ia.netlify.app
