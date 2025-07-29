@@ -59,7 +59,7 @@ export default async (request, context) => {
       const { data: planConfig } = await supabase
         .from('plan_configs')
         .select('*')
-        .eq('plan_type', profile.plan_type)
+        .eq('plan_type', profile?.plan_type || 'essencial')
         .single();
 
       return new Response(JSON.stringify({
@@ -67,8 +67,7 @@ export default async (request, context) => {
         usage: usage || {
           ai_questions_used: 0,
           activities_used: 0,
-          reports_generated: 0,
-          lives_attended: 0
+          reports_generated: 0
         },
         planConfig
       }), {

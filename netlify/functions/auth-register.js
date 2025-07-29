@@ -26,12 +26,22 @@ export default async (request, context) => {
 
   try {
     // Pegar dados do formulário
-    const { email, password, fullName, phone } = await request.json();
+    const { email, password, fullName, phone, selectedPlan } = await request.json();
 
     // Validações básicas
-    if (!email || !password || !fullName) {
+    if (!email || !password || !fullName || !selectedPlan) {
       return new Response(JSON.stringify({ 
-        error: 'Email, senha e nome completo são obrigatórios' 
+        error: 'Email, senha, nome completo e plano são obrigatórios' 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Validar plano selecionado
+    if (!['essencial', 'completo'].includes(selectedPlan)) {
+      return new Response(JSON.stringify({ 
+        error: 'Plano inválido. Escolha entre Essencial ou Completo' 
       }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -45,7 +55,8 @@ export default async (request, context) => {
       options: {
         data: {
           full_name: fullName,
-          phone: phone || ''
+          phone: phone || '',
+          selected_plan: selectedPlan
         }
       }
     });
@@ -62,7 +73,9 @@ export default async (request, context) => {
     // Sucesso!
     return new Response(JSON.stringify({ 
       success: true, 
-      message: 'Usuário criado com sucesso! Verifique seu email para confirmação.',
+      message: `Conta criada com sucesso! Plano ${selectedPlan} selecionado.`,
+      redirectToPayment: true,
+      selectedPlan: selectedPlan,
       user: {
         id: authData.user?.id,
         email: authData.user?.email

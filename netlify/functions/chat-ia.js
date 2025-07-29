@@ -69,14 +69,11 @@ export default async (request, context) => {
       });
     }
 
-    // Verificar se ainda está no trial ou tem plano ativo
-    const isTrialActive = profile.plan_type === 'trial' && 
-                         new Date(profile.trial_ends_at) > new Date();
-    
-    if (!isTrialActive && !['essencial', 'completo'].includes(profile.plan_type)) {
+    // Verificar se tem plano ativo (pagante)
+    if (!['essencial', 'completo'].includes(profile.plan_type)) {
       return new Response(JSON.stringify({ 
-        error: 'Trial expirado. Faça upgrade do seu plano!',
-        needsUpgrade: true 
+        error: 'Acesso negado. Assine um plano para usar o chat IA!',
+        needsPayment: true 
       }), {
         status: 402,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -112,12 +109,11 @@ export default async (request, context) => {
       usage = newUsage;
     }
 
-    // Verificar limite (exceto trial)
-    if (profile.plan_type !== 'trial' && 
-        usage.ai_questions_used >= planConfig.monthly_ai_questions) {
+    // Verificar limite do plano
+    if (usage.ai_questions_used >= planConfig.monthly_ai_questions) {
       return new Response(JSON.stringify({ 
-        error: `Limite de ${planConfig.monthly_ai_questions} perguntas atingido. Faça upgrade!`,
-        needsUpgrade: true,
+        error: `Limite de ${planConfig.monthly_ai_questions} perguntas atingido. Faça upgrade para o plano Completo!`,
+        needsUpgrade: profile.plan_type === 'essencial',
         currentUsage: usage.ai_questions_used,
         limit: planConfig.monthly_ai_questions
       }), {
