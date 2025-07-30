@@ -1,4 +1,3 @@
-// netlify/edge-functions/test-connection.js
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 export default async (request, context) => {
@@ -14,9 +13,15 @@ export default async (request, context) => {
   }
 
   try {
-    // Teste 1: Verificar variáveis de ambiente
-    const supabaseUrl = Deno.env.get('SUPABASE_DATABASE_URL') || Deno.env.get('NEXT_PUBLIC_SUPABASE_DATABASE_URL')
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') || Deno.env.get('NEXT_PUBLIC_SUPABASE_ANON_KEY')
+    // Teste 1: Verificar variáveis de ambiente (múltiplas possibilidades)
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || 
+                       Deno.env.get('SUPABASE_DATABASE_URL') || 
+                       Deno.env.get('NEXT_PUBLIC_SUPABASE_URL') ||
+                       Deno.env.get('NEXT_PUBLIC_SUPABASE_DATABASE_URL')
+    
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') || 
+                           Deno.env.get('NEXT_PUBLIC_SUPABASE_ANON_KEY')
+    
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 
     console.log('🔍 Verificando variáveis de ambiente...')
@@ -24,17 +29,25 @@ export default async (request, context) => {
     console.log('ANON KEY existe:', !!supabaseAnonKey)
     console.log('SERVICE KEY existe:', !!supabaseServiceKey)
 
+    // Retornar info das variáveis mesmo se não tiver todas
+    const envStatus = {
+      url: !!supabaseUrl,
+      anonKey: !!supabaseAnonKey,
+      serviceKey: !!supabaseServiceKey,
+      urlValue: supabaseUrl ? supabaseUrl.substring(0, 30) + '...' : 'Not found',
+      availableVars: Object.keys(Deno.env.toObject()).filter(key => 
+        key.includes('SUPABASE') || key.includes('DATABASE')
+      )
+    }
+
     if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceKey) {
       return new Response(JSON.stringify({
         success: false,
-        error: 'Variáveis de ambiente não encontradas',
-        details: {
-          url: !!supabaseUrl,
-          anonKey: !!supabaseAnonKey,
-          serviceKey: !!supabaseServiceKey
-        }
+        error: 'Algumas variáveis de ambiente não encontradas',
+        details: envStatus,
+        message: '⚠️ Verificar configuração das variáveis no Netlify'
       }), {
-        status: 500,
+        status: 200, // Mudando para 200 para debug
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
@@ -55,9 +68,12 @@ export default async (request, context) => {
       return new Response(JSON.stringify({
         success: false,
         error: 'Erro ao acessar banco de dados',
-        details: tablesError
+        details: {
+          ...envStatus,
+          dbError: tablesError
+        }
       }), {
-        status: 500,
+        status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
@@ -89,7 +105,7 @@ export default async (request, context) => {
       },
       data: {
         planConfigs: tables,
-        supabaseUrl: supabaseUrl.replace(/\/\/.*@/, '//***@'), // Hide credentials
+        envStatus,
         timestamp: new Date().toISOString()
       }
     }), {
@@ -102,9 +118,11 @@ export default async (request, context) => {
     return new Response(JSON.stringify({
       success: false,
       error: 'Erro interno do servidor',
-      details: error.message
+      details: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
     }), {
-      status: 500,
+      status: 200, // 200 para debug
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
   }
