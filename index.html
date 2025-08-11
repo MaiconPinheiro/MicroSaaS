@@ -3,35 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aurora IA - A Primeira IA Brasileira Especializada em Desenvolvimento Infantil </title>
+    <title>Aurora IA - Planos</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background: #f8f9fa;
             margin: 0;
             padding: 0;
-            background: #f5f7fa;
             color: #333;
         }
 
         .container {
             max-width: 1100px;
-            margin: auto;
+            margin: 0 auto;
             padding: 20px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .header h1 {
             font-size: 2.5rem;
-            margin-bottom: 10px;
+            margin: 0;
         }
 
         .ai-badge {
-            background: linear-gradient(135deg, #667eea, #764ba2);
             display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 5px 15px;
             border-radius: 20px;
@@ -40,13 +40,12 @@
         }
 
         .pricing-badge {
-            background: #28a745;
-            color: white;
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 10px;
-            font-size: 14px;
             margin-top: 15px;
+            font-size: 14px;
+            background: #e9ecef;
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: inline-block;
         }
 
         /* Toggle Mensal / Anual */
@@ -58,50 +57,42 @@
             background: #f8f9fa;
             padding: 10px;
             border-radius: 10px;
-            gap: 10px;
-        }
-        .toggle-label {
             font-weight: bold;
-            color: #555;
+        }
+        .billing-toggle label {
+            margin: 0 10px;
+            cursor: pointer;
+        }
+        .billing-toggle input[type="checkbox"] {
+            display: none;
         }
         .toggle-switch {
             position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 30px;
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 25px;
+            transition: background 0.3s;
         }
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute;
+        .toggle-switch::after {
             content: "";
-            height: 24px;
-            width: 24px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 21px;
+            height: 21px;
+            background: white;
             border-radius: 50%;
+            transition: transform 0.3s;
         }
-        input:checked + .slider {
-            background-color: #28a745;
+        input[type="checkbox"]:checked + .toggle-switch {
+            background: #28a745;
         }
-        input:checked + .slider:before {
-            transform: translateX(30px);
+        input[type="checkbox"]:checked + .toggle-switch::after {
+            transform: translateX(25px);
         }
 
-        /* Cards de Planos */
+        /* Planos */
         .plans-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -195,285 +186,353 @@
         .plan-btn.popular-btn {
             background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
         }
+
+        /* Avisos e formulários */
+        .medical-disclaimer {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .emergency-disclaimer {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .section-disclaimer {
+            background: #e2e3e5;
+            border-left: 4px solid #6c757d;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .btn-legal {
+            background: #17a2b8;
+            width: auto;
+            padding: 8px 16px;
+            margin: 5px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            color: white;
+            border-radius: 6px;
+        }
+        .hidden {
+            display: none;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #f5c6cb;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #c3e6cb;
+        }
+        .legal-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .legal-modal-content {
+            background: white;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+            .plans-section {
+                grid-template-columns: 1fr;
+            }
+            .plan-card.popular {
+                transform: none;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🌅 Aurora IA</h1>
-            <div class="ai-badge">🧠 PRIMEIRA IA BRASILEIRA PARA BEBÊS</div>
-            <p><strong>A Primeira Inteligência Artificial Brasileira Especializada em Desenvolvimento Infantil</strong></p>
-            <p style="font-size: 1.1rem; margin-top: 10px;">Tecnologia que ilumina o desenvolvimento do seu bebê</p>
-            <div class="pricing-badge">
-                <strong>💰 PLANOS DIRETOS</strong> - Sem trial, pagamento imediato com acesso total
-            </div>
-        </div>
+<div class="container">
+    <!-- Cabeçalho -->
+    <div class="header">
+        <h1>Escolha o Plano Ideal</h1>
+        <span class="ai-badge">Aurora IA - Desenvolvimento Infantil</span>
+    </div>
 
-        <!-- Toggle Mensal/Anual -->
-        <div class="billing-toggle">
-            <span class="toggle-label">Mensal</span>
-            <label class="toggle-switch">
-                <input type="checkbox" id="billingToggle">
-                <span class="slider"></span>
-            </label>
-            <span class="toggle-label">Anual (-16%)</span>
-        </div>
-                <!-- Seção de Planos -->
-        <div class="plans-section">
-            <!-- Plano Essencial -->
-            <div class="plan-card">
-                <div class="plan-title">⭐ Aurora IA Essencial</div>
-                <div class="plan-price" id="priceEssencial">
-                    <span class="currency">R$</span>19,90<span class="period">/mês</span>
-                </div>
-                <ul class="plan-features">
-                    <li class="limited">🤖 <strong>20 perguntas IA/mês</strong></li>
-                    <li class="limited">🎯 <strong>2 perfis de bebês</strong></li>
-                    <li class="included">✅ Atividades personalizadas</li>
-                    <li class="included">✅ Marcos de desenvolvimento</li>
-                    <li class="included">✅ 1 relatório PDF/mês</li>
-                    <li class="included">✅ WhatsApp automático</li>
-                    <li class="included">✅ Suporte por email</li>
-                    <li class="included">✅ Conformidade LGPD</li>
-                </ul>
-                <p style="font-size: 12px; color: #6c757d; margin: 15px 0;">
-                    💡 <strong id="pricePerQuestionEssencial">R$ 0,99 por pergunta IA</strong> • Ideal para uso básico
-                </p>
-                <button class="plan-btn" onclick="selectPlan('essencial')">
-                    Começar Agora - R$ 19,90/mês
-                </button>
-            </div>
+    <!-- Toggle Mensal/Anual -->
+    <div class="billing-toggle">
+        <label>Mensal</label>
+        <input type="checkbox" id="billingToggle">
+        <label for="billingToggle" class="toggle-switch"></label>
+        <label>Anual (-16%)</label>
+    </div>
 
-            <!-- Plano Completo -->
-            <div class="plan-card popular">
-                <div class="plan-title">🚀 Aurora IA Completo</div>
-                <div class="plan-price" id="priceCompleto">
-                    <span class="currency">R$</span>34,90<span class="period">/mês</span>
-                </div>
-                <ul class="plan-features">
-                    <li class="included">🤖 <strong>60 perguntas IA/mês</strong></li>
-                    <li class="included">🎯 <strong>5 perfis de bebês</strong></li>
-                    <li class="included">✅ Atividades personalizadas</li>
-                    <li class="included">✅ Marcos de desenvolvimento</li>
-                    <li class="included">✅ <strong>4 relatórios PDF/mês</strong></li>
-                    <li class="included">✅ WhatsApp automático</li>
-                    <li class="included">✅ <strong>Suporte prioritário</strong></li>
-                    <li class="included">✅ Conformidade LGPD</li>
-                </ul>
-                <p style="font-size: 12px; color: #6c757d; margin: 15px 0;">
-                    💡 <strong id="pricePerQuestionCompleto">R$ 0,58 por pergunta IA</strong> • Economia de 42%
-                </p>
-                <button class="plan-btn popular-btn" onclick="selectPlan('completo')">
-                    Começar Agora - R$ 34,90/mês
-                </button>
+    <!-- Seção de Planos -->
+    <div class="plans-section">
+        <!-- Plano Essencial -->
+        <div class="plan-card">
+            <div class="plan-title">⭐ Aurora IA Essencial</div>
+            <div class="plan-price" id="priceEssencial">
+                <span class="currency">R$</span>19,90<span class="period">/mês</span>
             </div>
-        </div>
-
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 30px; text-align: center;">
-            <h4 style="color: #495057; margin-bottom: 15px;">💳 Pagamento Seguro</h4>
-            <p style="color: #6c757d; margin: 0;">
-                <strong>Stripe</strong> • Cartão, PIX, Boleto • <strong>Cancele quando quiser</strong><br>
-                🔒 Dados protegidos com criptografia bancária • Faturamento automático
+            <ul class="plan-features">
+                <li class="limited">🤖 <strong>20 perguntas IA/mês</strong></li>
+                <li class="limited">🎯 <strong>2 perfis de bebês</strong></li>
+                <li class="included">✅ Atividades personalizadas</li>
+                <li class="included">✅ Marcos de desenvolvimento</li>
+                <li class="included">✅ 1 relatório PDF/mês</li>
+                <li class="included">✅ WhatsApp automático</li>
+                <li class="included">✅ Suporte por email</li>
+                <li class="included">✅ Conformidade LGPD</li>
+            </ul>
+            <p style="font-size: 12px; color: #6c757d; margin: 15px 0;">
+                💡 <strong id="pricePerQuestionEssencial">R$ 0,99 por pergunta IA</strong> • Ideal para uso básico
             </p>
-        </div>
-        <!-- Tela de Login -->
-        <div id="loginScreen" class="card hidden">
-            <h2 style="text-align: center; margin-bottom: 30px;">Entre na sua conta</h2>
-            <div class="section-disclaimer">
-                <strong>🔒 Proteção de Dados:</strong> Seus dados são protegidos conforme LGPD.
-                <a href="#" onclick="showLegalModal('privacidade')" style="color: #17a2b8;">Saiba mais</a>
-            </div>
-            <div class="form-group">
-                <label>Email:</label>
-                <input type="email" id="loginEmail" placeholder="seu@email.com">
-            </div>
-            <div class="form-group">
-                <label>Senha:</label>
-                <input type="password" id="loginPassword" placeholder="Sua senha">
-            </div>
-            <button class="btn" onclick="login()">Entrar</button>
-            <button class="btn btn-secondary" onclick="showPlans()">Ver Planos</button>
-            <div id="loginError" class="error hidden"></div>
+            <button class="plan-btn" onclick="selectPlan('essencial')">
+                Começar Agora - R$ 19,90/mês
+            </button>
         </div>
 
-        <!-- Tela de Cadastro -->
-        <div id="registerScreen" class="card hidden">
-            <h2 style="text-align: center; margin-bottom: 30px;">Criar conta - <span id="selectedPlanTitle">Aurora IA</span></h2>
-            <div class="section-disclaimer">
-                <strong>👶 Proteção Especial:</strong> Dados de crianças recebem proteção especial conforme LGPD.
-                Apenas pais/responsáveis podem cadastrar informações dos filhos.
+        <!-- Plano Completo -->
+        <div class="plan-card popular">
+            <div class="plan-title">🚀 Aurora IA Completo</div>
+            <div class="plan-price" id="priceCompleto">
+                <span class="currency">R$</span>34,90<span class="period">/mês</span>
             </div>
-            <div class="form-group">
-                <label>Nome completo:</label>
-                <input type="text" id="registerName" placeholder="Seu nome completo">
-            </div>
-            <div class="form-group">
-                <label>Email:</label>
-                <input type="email" id="registerEmail" placeholder="seu@email.com">
-            </div>
-            <div class="form-group">
-                <label>Telefone (WhatsApp):</label>
-                <input type="tel" id="registerPhone" placeholder="5511999999999">
-            </div>
-            <div class="form-group">
-                <label>Senha:</label>
-                <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres">
-            </div>
-            <div style="background: #fff3cd; padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 13px;">
-                <input type="checkbox" id="acceptTerms" required>
-                <label for="acceptTerms" style="display: inline; margin-left: 8px;">
-                    Aceito os <a href="#" onclick="showLegalModal('termos')">Termos de Uso</a> e
-                    <a href="#" onclick="showLegalModal('privacidade')">Política de Privacidade</a>
-                </label>
-            </div>
-            <div id="selectedPlanInfo" style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 15px 0; display: none;">
-                <h5 style="margin: 0 0 10px 0;">Plano Selecionado:</h5>
-                <p id="planDetails" style="margin: 0;"></p>
-            </div>
-            <button class="btn" onclick="register()" id="registerBtn">Criar conta e Pagar</button>
-            <button class="btn btn-secondary" onclick="showPlans()">Escolher outro plano</button>
-            <div id="registerError" class="error hidden"></div>
-        </div>
-
-        <!-- Modal Legal -->
-        <div id="legalModal" class="legal-modal hidden">
-            <div class="legal-modal-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 id="legalModalTitle">Documento Legal</h3>
-                    <button onclick="hideLegalModal()" style="background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer;">✕</button>
-                </div>
-                <div id="legalModalContent"></div>
-            </div>
+            <ul class="plan-features">
+                <li class="included">🤖 <strong>60 perguntas IA/mês</strong></li>
+                <li class="included">🎯 <strong>5 perfis de bebês</strong></li>
+                <li class="included">✅ Atividades personalizadas</li>
+                <li class="included">✅ Marcos de desenvolvimento</li>
+                <li class="included">✅ <strong>4 relatórios PDF/mês</strong></li>
+                <li class="included">✅ WhatsApp automático</li>
+                <li class="included">✅ <strong>Suporte prioritário</strong></li>
+                <li class="included">✅ Conformidade LGPD</li>
+            </ul>
+            <p style="font-size: 12px; color: #6c757d; margin: 15px 0;">
+                💡 <strong id="pricePerQuestionCompleto">R$ 0,58 por pergunta IA</strong> • Economia de 42%
+            </p>
+            <button class="plan-btn popular-btn" onclick="selectPlan('completo')">
+                Começar Agora - R$ 34,90/mês
+            </button>
         </div>
     </div>
 
-    <script>
-        let selectedPlan = null;
-        let annualBilling = false;
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 30px; text-align: center;">
+        <h4 style="color: #495057; margin-bottom: 15px;">💳 Pagamento Seguro</h4>
+        <p style="color: #6c757d; margin: 0;">
+            <strong>Stripe</strong> • Cartão, PIX, Boleto • <strong>Cancele quando quiser</strong><br>
+            🔒 Dados protegidos com criptografia bancária • Faturamento automático
+        </p>
+    </div>
+    <!-- Formulário de Login -->
+    <div id="loginSection" class="hidden">
+        <div class="section-disclaimer">
+            🔒 <strong>Proteção de Dados:</strong> Seus dados são protegidos conforme LGPD. 
+            <a href="#">Saiba mais</a>
+        </div>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" id="loginEmail" placeholder="seu@email.com">
+        </div>
+        <div class="form-group">
+            <label>Senha:</label>
+            <input type="password" id="loginPassword" placeholder="Sua senha">
+        </div>
+        <button class="btn" onclick="login()">Entrar</button>
+        <button class="btn btn-secondary" onclick="showPlans()">Ver Planos</button>
+    </div>
 
-        const plans = {
-            essencial: {
-                name: 'Aurora IA Essencial',
-                monthly: 19.90,
-                annual: 199.00,
-                features: '20 perguntas IA/mês, 2 perfis bebês, relatórios básicos',
-                priceId: 'price_essencial'
-            },
-            completo: {
-                name: 'Aurora IA Completo',
-                monthly: 34.90,
-                annual: 349.00,
-                features: '60 perguntas IA/mês, 5 perfis bebês, relatórios premium',
-                priceId: 'price_completo'
-            }
-        };
+    <!-- Formulário de Cadastro -->
+    <div id="registerSection" class="hidden">
+        <div class="section-disclaimer">
+            🛡 <strong>Proteção Especial:</strong> Dados de crianças recebem proteção especial conforme LGPD.
+            Apenas pais/responsáveis podem cadastrar informações dos filhos.
+        </div>
+        <div class="form-group">
+            <label>Nome completo:</label>
+            <input type="text" id="registerName" placeholder="Seu nome completo">
+        </div>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" id="registerEmail" placeholder="seu@email.com">
+        </div>
+        <div class="form-group">
+            <label>Telefone (WhatsApp):</label>
+            <input type="tel" id="registerPhone" placeholder="5511999999999">
+        </div>
+        <div class="form-group">
+            <label>Senha:</label>
+            <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres">
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="termsCheck">
+            Aceito os <a href="#" onclick="openLegal('termos')">Termos de Uso</a> e 
+            <a href="#" onclick="openLegal('privacidade')">Política de Privacidade</a>
+        </div>
+        <div id="selectedPlan" class="section-disclaimer" style="background: #e3f2fd; color: #0d47a1;">
+            Plano Selecionado - Nenhum
+        </div>
+        <button id="registerBtn" class="btn" onclick="register()">Criar conta</button>
+        <button class="btn btn-secondary" onclick="showPlans()">Escolher outro plano</button>
+    </div>
+</div>
 
-        function updatePrices() {
-            if (annualBilling) {
-                document.getElementById('priceEssencial').innerHTML = `<span class="currency">R$</span>${plans.essencial.annual.toFixed(2)}<span class="period">/ano</span>`;
-                document.getElementById('priceCompleto').innerHTML = `<span class="currency">R$</span>${plans.completo.annual.toFixed(2)}<span class="period">/ano</span>`;
-                document.getElementById('pricePerQuestionEssencial').textContent = 'R$ 0,83 por pergunta IA';
-                document.getElementById('pricePerQuestionCompleto').textContent = 'R$ 0,48 por pergunta IA';
+<!-- Script Toggle e Funções -->
+<script>
+    const toggle = document.getElementById("billingToggle");
+    const priceEssencial = document.getElementById("priceEssencial");
+    const priceCompleto = document.getElementById("priceCompleto");
+    const pricePerQuestionEssencial = document.getElementById("pricePerQuestionEssencial");
+    const pricePerQuestionCompleto = document.getElementById("pricePerQuestionCompleto");
+
+    toggle.addEventListener("change", function () {
+        if (this.checked) {
+            priceEssencial.innerHTML = '<span class="currency">R$</span>199,00<span class="period">/ano</span>';
+            priceCompleto.innerHTML = '<span class="currency">R$</span>349,00<span class="period">/ano</span>';
+            pricePerQuestionEssencial.textContent = "R$ 0,83 por pergunta IA";
+            pricePerQuestionCompleto.textContent = "R$ 0,48 por pergunta IA";
+        } else {
+            priceEssencial.innerHTML = '<span class="currency">R$</span>19,90<span class="period">/mês</span>';
+            priceCompleto.innerHTML = '<span class="currency">R$</span>34,90<span class="period">/mês</span>';
+            pricePerQuestionEssencial.textContent = "R$ 0,99 por pergunta IA";
+            pricePerQuestionCompleto.textContent = "R$ 0,58 por pergunta IA";
+        }
+    });
+
+    let selectedPlan = null;
+
+    function selectPlan(plan) {
+        selectedPlan = plan;
+        document.getElementById("selectedPlan").innerHTML =
+            plan === 'essencial'
+                ? "Plano Selecionado - Aurora IA Essencial - R$ " + (toggle.checked ? "199,00/ano" : "19,90/mês")
+                : "Plano Selecionado - Aurora IA Completo - R$ " + (toggle.checked ? "349,00/ano" : "34,90/mês");
+        document.getElementById("loginSection").classList.add("hidden");
+        document.getElementById("registerSection").classList.remove("hidden");
+    }
+
+    function showPlans() {
+        document.getElementById("loginSection").classList.add("hidden");
+        document.getElementById("registerSection").classList.add("hidden");
+    }
+
+    function login() {
+        alert("Login em desenvolvimento");
+    }
+
+    async function register() {
+        const name = document.getElementById("registerName").value;
+        const email = document.getElementById("registerEmail").value;
+        const phone = document.getElementById("registerPhone").value;
+        const password = document.getElementById("registerPassword").value;
+        const termsAccepted = document.getElementById("termsCheck").checked;
+
+        if (!name || !email || !phone || !password) {
+            alert("Preencha todos os campos.");
+            return;
+        }
+        if (!termsAccepted) {
+            alert("Você precisa aceitar os Termos de Uso e a Política de Privacidade.");
+            return;
+        }
+        if (!selectedPlan) {
+            alert("Escolha um plano antes de continuar.");
+            return;
+        }
+
+        try {
+            const res = await fetch("/.netlify/edge-functions/auth-register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, phone, password, plan: selectedPlan })
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert("Conta criada com sucesso!");
             } else {
-                document.getElementById('priceEssencial').innerHTML = `<span class="currency">R$</span>${plans.essencial.monthly.toFixed(2)}<span class="period">/mês</span>`;
-                document.getElementById('priceCompleto').innerHTML = `<span class="currency">R$</span>${plans.completo.monthly.toFixed(2)}<span class="period">/mês</span>`;
-                document.getElementById('pricePerQuestionEssencial').textContent = 'R$ 0,99 por pergunta IA';
-                document.getElementById('pricePerQuestionCompleto').textContent = 'R$ 0,58 por pergunta IA';
+                alert("Erro: " + (data.message || "Tente novamente"));
             }
+        } catch (err) {
+            alert("Erro ao conectar ao servidor.");
         }
+    }
 
-        function toggleBilling() {
-            annualBilling = !annualBilling;
-            updatePrices();
-        }
+    function openLegal(doc) {
+        alert("Abrir documento: " + doc);
+    }
+</script>
 
-        function selectPlan(planKey) {
-            selectedPlan = planKey;
-            const plan = plans[planKey];
-            const price = annualBilling ? plan.annual : plan.monthly;
-            document.getElementById('selectedPlanTitle').textContent = plan.name;
-            document.getElementById('planDetails').innerHTML = `<strong>${plan.name}</strong> - R$ ${price.toFixed(2)}${annualBilling ? '/ano' : '/mês'}<br><small>${plan.features}</small>`;
-            document.getElementById('selectedPlanInfo').style.display = 'block';
-            document.getElementById('registerBtn').textContent = `Criar conta e Pagar R$ ${price.toFixed(2)}${annualBilling ? '/ano' : '/mês'}`;
-            showRegister();
-        }
-
-        async function register() {
-            if (!selectedPlan) {
-                showError('registerError', 'Selecione um plano primeiro');
-                return;
-            }
-
-            const nome = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const telefone = document.getElementById('registerPhone').value;
-            const senha = document.getElementById('registerPassword').value;
-            const termsAccepted = document.getElementById('acceptTerms').checked;
-
-            if (!nome || !email || !telefone || !senha) {
-                showError('registerError', 'Preencha todos os campos');
-                return;
-            }
-            if (!termsAccepted) {
-                showError('registerError', 'É necessário aceitar os Termos de Uso e Política de Privacidade');
-                return;
-            }
-            if (senha.length < 6) {
-                showError('registerError', 'A senha deve ter pelo menos 6 caracteres');
-                return;
-            }
-
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.disabled = true;
-            btn.textContent = 'Processando pagamento...';
-
-            try {
-                const response = await fetch('/.netlify/edge-functions/auth-register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        nome: nome,
-                        email: email,
-                        telefone: telefone,
-                        senha: senha,
-                        plano: selectedPlan,
-                        preco: annualBilling ? plans[selectedPlan].annual : plans[selectedPlan].monthly,
-                        anual: annualBilling
-                    })
-                });
-                const result = await response.json();
-                if (response.ok && result.success && result.checkout_url) {
-                    window.location.href = result.checkout_url;
-                } else {
-                    showError('registerError', result.message || 'Erro ao criar conta');
-                }
-            } catch (err) {
-                showError('registerError', 'Erro de conexão. Tente novamente.');
-            }
-
-            btn.disabled = false;
-            btn.textContent = originalText;
-        }
-
-        function showError(elementId, message) {
-            const element = document.getElementById(elementId);
-            element.innerHTML = `<p>${message}</p>`;
-            element.classList.remove('hidden');
-            element.classList.add('error');
-        }
-
-        function hideAllScreens() {
-            document.querySelectorAll('#loginScreen, #registerScreen').forEach(s => s.classList.add('hidden'));
-        }
-        function showPlans() { hideAllScreens(); }
-        function showLogin() { hideAllScreens(); document.getElementById('loginScreen').classList.remove('hidden'); }
-        function showRegister() { hideAllScreens(); document.getElementById('registerScreen').classList.remove('hidden'); }
-
-        window.addEventListener('load', () => {
-            updatePrices();
-        });
-    </script>
 </body>
 </html>
-
