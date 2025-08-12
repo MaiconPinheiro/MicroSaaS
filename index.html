@@ -521,6 +521,7 @@
             const data = await res.json();
             if (data.success) {
                 alert("Conta criada com sucesso!");
+                window.location.href = "/login.html"; // ou a página inicial do app
             } else {
                 alert("Erro: " + (data.message || "Tente novamente"));
             }
