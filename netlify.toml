@@ -14,6 +14,10 @@
   path = "/.netlify/functions/auth-register"
 
 [[edge_functions]]
+  function = "auth-register-test"
+  path = "/.netlify/functions/auth-register-test"
+
+[[edge_functions]]
   function = "auth-login"
   path = "/.netlify/functions/auth-login"
 
