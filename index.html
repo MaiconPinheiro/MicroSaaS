@@ -513,7 +513,7 @@
         }
 
         try {
-            const res = await fetch("/.netlify/edge-functions/auth-register", {
+            const res = await fetch('/.netlify/edge-functions/auth-register-test', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, email, phone, password, plan: selectedPlan })
