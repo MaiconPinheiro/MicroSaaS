@@ -1,52 +1,51 @@
-import { createClient } from '@supabase/supabase-js';
+const { createClient } = require("@supabase/supabase-js");
 
 const supabase = createClient(
-  process.env.SUPABASE_DATABASE_URL,
-  process.env.SUPABASE_ANON_KEY
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-export async function handler(event) {
-  try {
-    if (event.httpMethod !== 'POST') {
-      return {
-        statusCode: 405,
-        body: JSON.stringify({ error: 'Método não permitido' })
-      };
+exports.handler = async (event) => {
+    if (event.httpMethod !== "POST") {
+        return {
+            statusCode: 405,
+            body: JSON.stringify({ message: "Método não permitido" }),
+        };
     }
 
-    const data = JSON.parse(event.body || '{}');
-    const { name, email, phone, plan } = data;
+    try {
+        const { name, email, phone, password } = JSON.parse(event.body);
 
-    if (!name || !email || !phone || !plan) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: 'Campos obrigatórios faltando' })
-      };
+        if (!name || !email || !phone || !password) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ message: "Campos obrigatórios faltando" }),
+            };
+        }
+
+        const { data, error } = await supabase.auth.admin.createUser({
+            email,
+            password,
+            user_metadata: { name, phone }
+        });
+
+        if (error) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ message: error.message }),
+            };
+        }
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ message: "Usuário criado com sucesso", user: data }),
+        };
+
+    } catch (error) {
+        console.error(error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ message: "Erro interno no servidor" }),
+        };
     }
-
-    const { error } = await supabase.from('profiles').insert({
-      id: crypto.randomUUID(),
-      email,
-      created_at: new Date(),
-      status: 'active'
-    });
-
-    if (error) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: error.message })
-      };
-    }
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: 'Usuário registrado com sucesso' })
-    };
-
-  } catch (err) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Erro interno no servidor' })
-    };
-  }
-}
+};
