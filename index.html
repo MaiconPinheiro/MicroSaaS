@@ -491,45 +491,43 @@
     function login() {
         alert("Login em desenvolvimento");
     }
-
     async function register() {
-        const name = document.getElementById("registerName").value;
-        const email = document.getElementById("registerEmail").value;
-        const phone = document.getElementById("registerPhone").value;
-        const password = document.getElementById("registerPassword").value;
-        const termsAccepted = document.getElementById("termsCheck").checked;
+    const name = document.getElementById("registerName").value.trim();
+    const email = document.getElementById("registerEmail").value.trim();
+    const phone = document.getElementById("registerPhone").value.trim();
+    const password = document.getElementById("registerPassword").value.trim();
+    const termsAccepted = document.getElementById("termsCheck").checked;
 
-        if (!name || !email || !phone || !password) {
-            alert("Preencha todos os campos.");
-            return;
-        }
-        if (!termsAccepted) {
-            alert("Você precisa aceitar os Termos de Uso e a Política de Privacidade.");
-            return;
-        }
-        if (!selectedPlan) {
-            alert("Escolha um plano antes de continuar.");
-            return;
-        }
-
-        try {
-            const res = await fetch('/.netlify/functions/auth-register-test', {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, email, phone, password, plan: selectedPlan })
-            });
-            const data = await res.json();
-            if (data.success) {
-                alert("Conta criada com sucesso!");
-                window.location.href = "/login.html"; // ou a página inicial do app
-            } else {
-                alert("Erro: " + (data.message || "Tente novamente"));
-            }
-        } catch (err) {
-            alert("Erro ao conectar ao servidor.");
-        }
+    if (!name || !email || !phone || !password) {
+        alert("Preencha todos os campos.");
+        return;
     }
 
+    if (!termsAccepted) {
+        alert("Você precisa aceitar os Termos de Uso e a Política de Privacidade.");
+        return;
+    }
+
+    try {
+        const response = await fetch("/.netlify/functions/auth-register-test", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, phone, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("Cadastro realizado com sucesso!");
+            showLogin(); // função para voltar à tela de login
+        } else {
+            alert(data.message || "Erro ao cadastrar. Tente novamente.");
+        }
+    } catch (error) {
+        console.error("Erro ao conectar:", error);
+        alert("Erro de conexão. Tente novamente.");
+    }
+}
     function openLegal(doc) {
         alert("Abrir documento: " + doc);
     }
