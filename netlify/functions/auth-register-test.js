@@ -1,11 +1,10 @@
 // netlify/functions/auth-register-test.js - VERSÃO CORRIGIDA
-
 const { createClient } = require('@supabase/supabase-js');
 
-// Configuração do Supabase com variáveis de ambiente CORRETAS
+// ✅ CORRIGIDO: Usar process.env para Node.js (não Deno.env)
 const supabase = createClient(
-  Deno.env.get('SUPABASE_URL'),                // ✅ CORRIGIDO: Deno.env.get
-  Deno.env.get('SUPABASE_ANON_KEY')           // ✅ CORRIGIDO: ANON_KEY em vez de SERVICE_ROLE
+  process.env.SUPABASE_URL || process.env.SUPABASE_DATABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 exports.handler = async (event) => {
@@ -19,7 +18,6 @@ exports.handler = async (event) => {
     'Content-Type': 'application/json'
   };
 
-  // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
@@ -28,7 +26,6 @@ exports.handler = async (event) => {
     };
   }
 
-  // Only allow POST
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -38,13 +35,20 @@ exports.handler = async (event) => {
   }
 
   try {
-    // Parse request body
-    const { name, email, phone, password } = JSON.parse(event.body);
+    const { name, email, phone, password, nome, senha, telefone, plano } = JSON.parse(event.body);
     
-    console.log('📝 Dados recebidos:', { name, email, phone, password: '[HIDDEN]' });
+    // Aceitar formato português e inglês
+    const userData = {
+      name: name || nome,
+      email: email,
+      phone: phone || telefone,
+      password: password || senha,
+      plano: plano || 'essencial'
+    };
+    
+    console.log('📝 Dados recebidos:', { ...userData, password: '[HIDDEN]' });
 
-    // Validação básica
-    if (!name || !email || !password) {
+    if (!userData.name || !userData.email || !userData.password) {
       return {
         statusCode: 400,
         headers,
@@ -54,7 +58,7 @@ exports.handler = async (event) => {
 
     // Validar email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(userData.email)) {
       return {
         statusCode: 400,
         headers,
@@ -62,8 +66,7 @@ exports.handler = async (event) => {
       };
     }
 
-    // Validar senha
-    if (password.length < 6) {
+    if (userData.password.length < 6) {
       return {
         statusCode: 400,
         headers,
@@ -75,8 +78,8 @@ exports.handler = async (event) => {
 
     // Criar usuário no Supabase Auth
     const { data: authData, error: authError } = await supabase.auth.signUp({
-      email: email,
-      password: password,
+      email: userData.email,
+      password: userData.password,
     });
 
     if (authError) {
@@ -98,7 +101,6 @@ exports.handler = async (event) => {
     }
 
     if (!authData.user) {
-      console.error('❌ Usuário não foi criado');
       return {
         statusCode: 500,
         headers,
@@ -108,24 +110,38 @@ exports.handler = async (event) => {
 
     console.log('✅ Usuário criado:', authData.user.id);
 
+    // Configuração padrão do plano
+    const planData = {
+      id: 'essencial',
+      nome: 'Aurora IA Essencial',
+      perguntas_mes: 20,
+      relatorios_mes: 1,
+      perfis_bebes: 2,
+      billing_period: 'monthly'
+    };
+
+    // Calcular período
+    const now = new Date();
+    const periodEnd = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
+
     // Criar perfil do usuário
     const profileData = {
       id: authData.user.id,
-      nome: name,
-      email: email,
-      telefone: phone || null,
-      plano: 'essencial',
+      nome: userData.name,
+      email: userData.email,
+      telefone: userData.phone || null,
+      plano: planData.id,
       status: 'pending_payment',
       payment_status: 'pending',
       perguntas_utilizadas: 0,
-      perguntas_limite: 20,
+      perguntas_limite: planData.perguntas_mes,
       relatorios_utilizados: 0,
-      relatorios_limite: 1,
-      perfis_bebes_limite: 2,
-      periodo_inicio: new Date().toISOString(),
-      periodo_fim: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 dias
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      relatorios_limite: planData.relatorios_mes,
+      perfis_bebes_limite: planData.perfis_bebes,
+      periodo_inicio: now.toISOString(),
+      periodo_fim: periodEnd.toISOString(),
+      created_at: now.toISOString(),
+      updated_at: now.toISOString()
     };
 
     const { data: profileResult, error: profileError } = await supabase
@@ -144,7 +160,6 @@ exports.handler = async (event) => {
 
     console.log('✅ Perfil criado com sucesso');
 
-    // Sucesso
     return {
       statusCode: 200,
       headers,
@@ -153,8 +168,9 @@ exports.handler = async (event) => {
         message: 'Cadastro realizado com sucesso!',
         user: {
           id: authData.user.id,
-          email: email,
-          nome: name
+          email: userData.email,
+          nome: userData.name,
+          plano: planData.nome
         }
       })
     };
