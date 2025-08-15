@@ -488,46 +488,65 @@
         document.getElementById("registerSection").classList.add("hidden");
     }
 
+    // ✅ CORRIGIDO: Adicionar função showLogin()
+    function showLogin() {
+        document.getElementById("registerSection").classList.add("hidden");
+        document.getElementById("loginSection").classList.remove("hidden");
+    }
+
     function login() {
         alert("Login em desenvolvimento");
     }
+
     async function register() {
-    const name = document.getElementById("registerName").value.trim();
-    const email = document.getElementById("registerEmail").value.trim();
-    const phone = document.getElementById("registerPhone").value.trim();
-    const password = document.getElementById("registerPassword").value.trim();
-    const termsAccepted = document.getElementById("termsCheck").checked;
+        const name = document.getElementById("registerName").value.trim();
+        const email = document.getElementById("registerEmail").value.trim();
+        const phone = document.getElementById("registerPhone").value.trim();
+        const password = document.getElementById("registerPassword").value.trim();
+        const termsAccepted = document.getElementById("termsCheck").checked;
 
-    if (!name || !email || !phone || !password) {
-        alert("Preencha todos os campos.");
-        return;
-    }
-
-    if (!termsAccepted) {
-        alert("Você precisa aceitar os Termos de Uso e a Política de Privacidade.");
-        return;
-    }
-
-    try {
-        const response = await fetch("/.netlify/functions/auth-register-test", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, phone, password })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            alert("Cadastro realizado com sucesso!");
-            showLogin(); // função para voltar à tela de login
-        } else {
-            alert(data.message || "Erro ao cadastrar. Tente novamente.");
+        if (!name || !email || !phone || !password) {
+            alert("Preencha todos os campos.");
+            return;
         }
-    } catch (error) {
-        console.error("Erro ao conectar:", error);
-        alert("Erro de conexão. Tente novamente.");
+
+        if (!termsAccepted) {
+            alert("Você precisa aceitar os Termos de Uso e a Política de Privacidade.");
+            return;
+        }
+
+        try {
+            const response = await fetch("/.netlify/functions/auth-register-test", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, phone, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("🎉 Cadastro realizado com sucesso! \n\n✅ Sua conta foi criada\n📱 Em breve você receberá uma mensagem no WhatsApp\n🔐 Agora você pode fazer login");
+                
+                // ✅ CORRIGIDO: Limpar formulário e mostrar login
+                document.getElementById("registerName").value = "";
+                document.getElementById("registerEmail").value = "";
+                document.getElementById("registerPhone").value = "";
+                document.getElementById("registerPassword").value = "";
+                document.getElementById("termsCheck").checked = false;
+                
+                // Preencher email no login
+                document.getElementById("loginEmail").value = email;
+                
+                showLogin();
+            } else {
+                alert(data.error || "Erro ao cadastrar. Tente novamente.");
+            }
+        } catch (error) {
+            console.error("Erro ao conectar:", error);
+            alert("Erro de conexão. Tente novamente.");
+        }
     }
-}
+
     function openLegal(doc) {
         alert("Abrir documento: " + doc);
     }
