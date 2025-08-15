@@ -1,7 +1,7 @@
-// netlify/functions/auth-register-test.js - VERSÃO FINAL CORRIGIDA
+// netlify/functions/auth-register-test.js - VERSÃO COM CRIAÇÃO MANUAL DE PERFIL
 const { createClient } = require('@supabase/supabase-js');
 
-// ✅ CORRIGIDO: Usar process.env para Node.js (não Deno.env)
+// Usar service role para ter permissões totais
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.SUPABASE_DATABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -76,18 +76,17 @@ exports.handler = async (event) => {
 
     console.log('✅ Validações passaram, criando usuário...');
 
-    // ✅ CORRIGIDO: Criar usuário no Supabase Auth com metadados
-    const { data: authData, error: authError } = await supabase.auth.signUp({
+    // 🔧 FORÇAR CRIAÇÃO SEM EMAIL CONFIRMATION
+    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email: userData.email,
       password: userData.password,
-      options: {
-        data: {
-          name: userData.name,
-          nome: userData.name,
-          phone: userData.phone,
-          telefone: userData.phone,
-          plano: userData.plano
-        }
+      email_confirm: true, // Confirmar email automaticamente
+      user_metadata: {
+        name: userData.name,
+        nome: userData.name,
+        phone: userData.phone,
+        telefone: userData.phone,
+        plano: userData.plano
       }
     });
 
@@ -119,56 +118,51 @@ exports.handler = async (event) => {
 
     console.log('✅ Usuário criado:', authData.user.id);
 
-    // ✅ AGUARDAR um momento para o trigger criar o perfil
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // 🔧 CRIAR PERFIL MANUALMENTE (ignorar trigger)
+    console.log('🛠️ Criando perfil manualmente...');
+    
+    const profileData = {
+      id: authData.user.id,
+      nome: userData.name,
+      email: userData.email,
+      telefone: userData.phone || null,
+      plano: 'essencial',
+      status: 'pending_payment',
+      payment_status: 'pending',
+      perguntas_utilizadas: 0,
+      perguntas_limite: 20,
+      relatorios_utilizados: 0,
+      relatorios_limite: 1,
+      perfis_bebes_limite: 2,
+      periodo_inicio: new Date().toISOString(),
+      periodo_fim: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 dias
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
 
-    // ✅ Verificar se o perfil foi criado pelo trigger
-    const { data: profile, error: profileError } = await supabase
+    // Usar service role para inserir diretamente
+    const { data: profileResult, error: profileError } = await supabase
       .from('profiles')
-      .select('*')
-      .eq('id', authData.user.id)
+      .insert([profileData])
+      .select()
       .single();
 
     if (profileError) {
-      console.error('❌ Perfil não foi criado pelo trigger:', profileError);
+      console.error('❌ Erro ao criar perfil:', profileError);
       
-      // Se o trigger falhou, criar manualmente
-      const profileData = {
-        id: authData.user.id,
-        nome: userData.name,
-        email: userData.email,
-        telefone: userData.phone || null,
-        plano: 'essencial',
-        status: 'pending_payment',
-        payment_status: 'pending',
-        perguntas_utilizadas: 0,
-        perguntas_limite: 20,
-        relatorios_utilizados: 0,
-        relatorios_limite: 1,
-        perfis_bebes_limite: 2
+      // Se o perfil falhar, deletar o usuário criado
+      await supabase.auth.admin.deleteUser(authData.user.id);
+      
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: 'Erro ao criar perfil: ' + profileError.message })
       };
-
-      const { data: manualProfile, error: manualError } = await supabase
-        .from('profiles')
-        .insert([profileData])
-        .select()
-        .single();
-
-      if (manualError) {
-        console.error('❌ Erro ao criar perfil manualmente:', manualError);
-        return {
-          statusCode: 500,
-          headers,
-          body: JSON.stringify({ error: 'Erro ao criar perfil' })
-        };
-      }
-
-      console.log('✅ Perfil criado manualmente');
-    } else {
-      console.log('✅ Perfil criado automaticamente pelo trigger');
     }
 
-    // ✅ SUCESSO - Retornar response correta
+    console.log('✅ Perfil criado com sucesso:', profileResult);
+
+    // ✅ SUCESSO TOTAL
     return {
       statusCode: 200,
       headers,
