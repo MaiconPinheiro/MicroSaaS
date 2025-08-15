@@ -1,4 +1,4 @@
-// netlify/functions/auth-register-test.js - VERSÃO CORRIGIDA
+// netlify/functions/auth-register-test.js - VERSÃO FINAL CORRIGIDA
 const { createClient } = require('@supabase/supabase-js');
 
 // ✅ CORRIGIDO: Usar process.env para Node.js (não Deno.env)
@@ -76,10 +76,19 @@ exports.handler = async (event) => {
 
     console.log('✅ Validações passaram, criando usuário...');
 
-    // Criar usuário no Supabase Auth
+    // ✅ CORRIGIDO: Criar usuário no Supabase Auth com metadados
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: userData.email,
       password: userData.password,
+      options: {
+        data: {
+          name: userData.name,
+          nome: userData.name,
+          phone: userData.phone,
+          telefone: userData.phone,
+          plano: userData.plano
+        }
+      }
     });
 
     if (authError) {
@@ -110,56 +119,56 @@ exports.handler = async (event) => {
 
     console.log('✅ Usuário criado:', authData.user.id);
 
-    // Configuração padrão do plano
-    const planData = {
-      id: 'essencial',
-      nome: 'Aurora IA Essencial',
-      perguntas_mes: 20,
-      relatorios_mes: 1,
-      perfis_bebes: 2,
-      billing_period: 'monthly'
-    };
+    // ✅ AGUARDAR um momento para o trigger criar o perfil
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Calcular período
-    const now = new Date();
-    const periodEnd = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
-
-    // Criar perfil do usuário
-    const profileData = {
-      id: authData.user.id,
-      nome: userData.name,
-      email: userData.email,
-      telefone: userData.phone || null,
-      plano: planData.id,
-      status: 'pending_payment',
-      payment_status: 'pending',
-      perguntas_utilizadas: 0,
-      perguntas_limite: planData.perguntas_mes,
-      relatorios_utilizados: 0,
-      relatorios_limite: planData.relatorios_mes,
-      perfis_bebes_limite: planData.perfis_bebes,
-      periodo_inicio: now.toISOString(),
-      periodo_fim: periodEnd.toISOString(),
-      created_at: now.toISOString(),
-      updated_at: now.toISOString()
-    };
-
-    const { data: profileResult, error: profileError } = await supabase
+    // ✅ Verificar se o perfil foi criado pelo trigger
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .insert([profileData])
-      .select();
+      .select('*')
+      .eq('id', authData.user.id)
+      .single();
 
     if (profileError) {
-      console.error('❌ Erro ao criar perfil:', profileError);
-      return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({ error: 'Erro ao criar perfil: ' + profileError.message })
+      console.error('❌ Perfil não foi criado pelo trigger:', profileError);
+      
+      // Se o trigger falhou, criar manualmente
+      const profileData = {
+        id: authData.user.id,
+        nome: userData.name,
+        email: userData.email,
+        telefone: userData.phone || null,
+        plano: 'essencial',
+        status: 'pending_payment',
+        payment_status: 'pending',
+        perguntas_utilizadas: 0,
+        perguntas_limite: 20,
+        relatorios_utilizados: 0,
+        relatorios_limite: 1,
+        perfis_bebes_limite: 2
       };
+
+      const { data: manualProfile, error: manualError } = await supabase
+        .from('profiles')
+        .insert([profileData])
+        .select()
+        .single();
+
+      if (manualError) {
+        console.error('❌ Erro ao criar perfil manualmente:', manualError);
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({ error: 'Erro ao criar perfil' })
+        };
+      }
+
+      console.log('✅ Perfil criado manualmente');
+    } else {
+      console.log('✅ Perfil criado automaticamente pelo trigger');
     }
 
-    console.log('✅ Perfil criado com sucesso');
-
+    // ✅ SUCESSO - Retornar response correta
     return {
       statusCode: 200,
       headers,
@@ -170,7 +179,7 @@ exports.handler = async (event) => {
           id: authData.user.id,
           email: userData.email,
           nome: userData.name,
-          plano: planData.nome
+          plano: 'Aurora IA Essencial'
         }
       })
     };
